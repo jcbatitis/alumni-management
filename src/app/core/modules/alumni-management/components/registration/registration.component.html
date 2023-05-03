@@ -1,0 +1,45 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Registration</mat-card-title>
+  </mat-card-header>
+
+  <mat-card-content>
+    <form [formGroup]="userForm">
+      <mat-form-field appearance="fill">
+        <mat-label>First Name</mat-label>
+        <input matInput formControlName="firstName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Middle Name</mat-label>
+        <input matInput formControlName="middleName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Family Name</mat-label>
+        <input matInput formControlName="familyName" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Password</mat-label>
+        <input matInput type="password" formControlName="password" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" />
+      </mat-form-field>
+
+      <div class="btn-group">
+        <button mat-raised-button color="accent" (click)="redirectToLogin()">Back To Login</button>
+        <button mat-raised-button color="primary" (click)="submit()">Register</button>
+        <!-- <button mat-raised-button color="primary" (click)="submit(true)">Create Admin</button> -->
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>

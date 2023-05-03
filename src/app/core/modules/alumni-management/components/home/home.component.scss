@@ -1,0 +1,37 @@
+:host {
+  mat-card {
+    margin: 20px auto;
+    max-width: 1000px;
+
+    mat-icon {
+      margin-right: 5px;
+    }
+
+    mat-form-field {
+      margin: 10px 0 0 5px;
+      width: 50%;
+    }
+
+    mat-card-header {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    mat-chip-list {
+      margin-left: 10px;
+      mat-chip {
+        cursor: pointer;
+      }
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  table {
+    width: 100%;
+  }
+}
