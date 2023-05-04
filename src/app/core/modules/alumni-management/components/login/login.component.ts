@@ -66,6 +66,11 @@ export class LoginComponent {
         } else if (user.role === 'admin') {
           this.getAllUsers();
         }
+      }, error => {
+        this._snackBar.open("GetUserByEmail(): Error", null, {
+          duration: 3000
+        });
+        this.loaderService.setLoader(false);
       });
   }
 
