@@ -280,7 +280,7 @@ export class HomeComponent implements OnInit {
 
   public getMark(mark: number): string {
     let grade: string;
-    if (mark > 80) {
+    if (mark >= 80) {
       grade = 'HD';
     }
 
