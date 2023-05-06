@@ -5,6 +5,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/components/shared.module';
 import { HttpClientModule } from '@angular/common/http';
+import { SafePipe } from './core/pipes/safe.pipe';
+import { PipeModule } from './core/pipes/pipe.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -13,7 +15,6 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     SharedModule,
     HttpClientModule,
-
   ],
   providers: [],
   bootstrap: [AppComponent],

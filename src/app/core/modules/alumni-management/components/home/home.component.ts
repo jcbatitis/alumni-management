@@ -1,51 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user.service';
 import { IUserDTO } from 'src/app/core/models/user';
-import { FormGroup } from '@angular/forms';
-import { TranscriptService } from 'src/app/core/services/transcript.service';
-import { Grade } from 'src/app/core/models/transcript';
-
-import jsPDF, { jsPDFOptions } from 'jspdf';
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { Router } from '@angular/router';
-import { LoaderService } from 'src/app/core/services/loader.service';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  public userForm: FormGroup;
-
-  displayedColumns: string[] = ['year', 'course_code', 'name', 'units', 'mark', 'grade'];
-  userColumns: string[] = ['student_id', 'first_name', 'middle_name', 'family_name', 'email', 'select'];
-
-  public transcriptSource: MatTableDataSource<Grade>;
-  public studentsSource: MatTableDataSource<IUserDTO>;
-
-  public userDetail: IUserDTO;
-  public transcriptRecord: Grade[];
-  public listOfUsers: IUserDTO[];
-  private transcriptRecordStudentId: string;
-
-  public tabIndex: number = 1;
-
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-
-  constructor(private userService: UserService,
-    private transcriptService: TranscriptService,
+  constructor(
     private router: Router,
-    private loaderService: LoaderService,
-    private _snackBar: MatSnackBar) {
-  }
+    private userService: UserService,
+    private _snackBar: MatSnackBar
+  ) {}
+  public userDetail: IUserDTO;
 
   ngOnInit(): void {
     const token = localStorage.getItem('userAccessToken');
@@ -53,34 +23,12 @@ export class HomeComponent implements OnInit {
       this.router.navigate(['alumni', 'login']);
     }
 
-    if (this.userService?.userList) {
-      this.listOfUsers = this.userService.userList.filter(user => user.role === 'student');
-      this.studentsSource = new MatTableDataSource(this.listOfUsers);
-    }
-
-    if (this.userService?.userDetail) {
-      this.userDetail = this.userService.userDetail;
-    }
-
-    if (this.transcriptService?.userTranscript?.grades) {
-      this.transcriptRecord = this.transcriptService.userTranscript.grades;
-      this.transcriptRecordStudentId = this.transcriptService.userTranscript.student_id;
-      this.transcriptSource = new MatTableDataSource(this.transcriptRecord);
-      this.transcriptSource.paginator = this.paginator;
-    }
-
-    this.userService.allUsersLoaded$.subscribe(isLoaded => {
-      if (isLoaded) {
-        this.listOfUsers = this.userService.userList.filter(user => user.role === 'student');
-        this.studentsSource = new MatTableDataSource(this.listOfUsers);
-      }
-    });
-
-    this.userService.userDetailsLoaded$.subscribe(isLoaded => {
+    this.userService.userDetailsLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
         this.userDetail = this.userService.userDetail;
       }
     });
+<<<<<<< Updated upstream
 
     this.transcriptService.transcriptsLoaded$.subscribe(isLoaded => {
       if (isLoaded) {
@@ -301,5 +249,7 @@ export class HomeComponent implements OnInit {
     }
 
     return grade;
+=======
+>>>>>>> Stashed changes
   }
 }

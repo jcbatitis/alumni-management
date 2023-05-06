@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IUserDTO } from 'src/app/core/models/user';
 import { environment } from 'src/environments/environment';
 
@@ -15,9 +15,9 @@ export class UserService {
 
     private users: IUserDTO[];
 
-    public userDetailsLoaded$: Subject<IUserDTO> = new Subject<IUserDTO>();
+    public userDetailsLoaded$: BehaviorSubject<IUserDTO> = new BehaviorSubject<IUserDTO>(null);
     
-    public allUsersLoaded$: Subject<IUserDTO[]> = new Subject<IUserDTO[]>();
+    public allUsersLoaded$: BehaviorSubject<IUserDTO[]> = new BehaviorSubject<IUserDTO[]>(null);
 
     constructor(private http: HttpClient) { }
 

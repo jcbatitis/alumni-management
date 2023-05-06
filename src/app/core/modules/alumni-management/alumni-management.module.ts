@@ -8,10 +8,27 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AdminComponent } from './components/admin/admin.component';
-import { TableComponent } from './components/table/table.component';
+import { VerificationComponent } from './components/verification/verification.component';
+import { StudentDetailsComponent } from './components/student-details/student-details.component';
+import { PipeModule } from '../../pipes/pipe.module';
 
 @NgModule({
-  declarations: [AlumniManagementComponent, RegistrationComponent, LoginComponent, HomeComponent, AdminComponent, TableComponent],
-  imports: [CommonModule, AlumniManagementRoutingModule, MaterialModule, ReactiveFormsModule],
+  declarations: [
+    AlumniManagementComponent,
+    RegistrationComponent,
+    LoginComponent,
+    HomeComponent,
+    AdminComponent,
+    VerificationComponent,
+    StudentDetailsComponent,
+  ],
+  imports: [
+    CommonModule,
+    AlumniManagementRoutingModule,
+    MaterialModule,
+    ReactiveFormsModule,
+    PipeModule.forRoot(),
+  ],
+  providers: [],
 })
 export class AlumniManagementModule {}

@@ -19,6 +19,7 @@ export class LoginComponent {
 
   public loginForm: FormGroup;
   public email: string;
+  public user: IUserDTO;
 
   constructor(private authenticationService: AuthenticationService,
     private userService: UserService,
