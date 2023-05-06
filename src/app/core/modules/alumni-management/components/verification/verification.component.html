@@ -1,0 +1,16 @@
+<mat-card>
+  <mat-card-content class="login">
+    <h1>Verify</h1>
+
+    <form [formGroup]="form" (ngSubmit)="verify()">
+      <mat-form-field appearance="fill">
+        <mat-label>Student ID</mat-label>
+        <input matInput formControlName="studentId" />
+      </mat-form-field>
+
+      <div class="btn-group">
+        <button mat-raised-button color="primary">Verify</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
