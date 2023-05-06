@@ -21,7 +21,6 @@ export class StudentDetailsComponent implements OnInit {
     private userService: UserService,
     private transcriptService: TranscriptService,
     private _snackBar: MatSnackBar,
-    private _sanitizer: DomSanitizer
   ) {}
 
   public transcriptSource: MatTableDataSource<Grade>;

@@ -1,3 +1,25 @@
+<div *ngIf="studentDetail" class="student">
+  <div class="detail">
+    <h2>SELECTED STUDENT</h2>
+    <h4>
+      Name:
+      {{ studentDetail?.first_name + " " + studentDetail?.family_name }}
+    </h4>
+    <h4>ID: {{ studentDetail?.student_id }}</h4>
+  </div>
+
+  <mat-chip-list class="mat-chip-list-stacked">
+    <mat-chip color="primary" selected (click)="downloadTranscript()">
+      <mat-icon aria-hidden="false">file_copy</mat-icon>
+      Download Transcripts</mat-chip
+    >
+    <mat-chip color="accent" selected (click)="viewCertificate(true)">
+      <mat-icon aria-hidden="false">file_copy</mat-icon>
+      Download Certificate</mat-chip
+    >
+  </mat-chip-list>
+</div>
+
 <mat-tab-group [(selectedIndex)]="tabIndex">
   <mat-tab>
     <ng-template mat-tab-label> Student List </ng-template>
@@ -61,13 +83,6 @@
 
   <mat-tab *ngIf="transcriptRecord">
     <ng-template mat-tab-label> Transcript </ng-template>
-    <br />
-    <h4>
-      Name:
-      {{ studentDetail?.first_name + " " + studentDetail?.family_name }}
-    </h4>
-    <h5>ID: {{ studentDetail?.student_id }}</h5>
-
     <mat-form-field class="filter">
       <mat-label>Filter</mat-label>
       <input matInput (keyup)="applyTranscriptFilter($event)" #input />
@@ -128,5 +143,10 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
+  </mat-tab>
+
+  <mat-tab *ngIf="transcriptRecord">
+    <ng-template mat-tab-label> Certificate </ng-template>
+    <iframe [src]="studentCertificateUrl | safe : 'resourceUrl'"></iframe>
   </mat-tab>
 </mat-tab-group>

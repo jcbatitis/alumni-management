@@ -1,19 +1,4 @@
-<mat-chip-list>
-  <mat-chip color="primary" selected (click)="downloadTranscript()">
-    <mat-icon aria-hidden="false">file_copy</mat-icon>
-    Download Transcripts</mat-chip
-  >
-  <mat-chip color="accent" selected (click)="viewCertificate(true)">
-    <mat-icon aria-hidden="false">file_copy</mat-icon>
-    Download Certificate</mat-chip
-  >
-</mat-chip-list>
-
 <mat-tab-group>
-  <mat-tab>
-    <ng-template mat-tab-label> Certificate </ng-template>
-    <iframe [src]="studentCertificateUrl | safe : 'resourceUrl'"></iframe>
-  </mat-tab>
   <mat-tab>
     <ng-template mat-tab-label> Transcript </ng-template>
 
@@ -78,4 +63,20 @@
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
   </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label> Certificate </ng-template>
+    <iframe [src]="studentCertificateUrl | safe : 'resourceUrl'"></iframe>
+  </mat-tab>
 </mat-tab-group>
+
+<mat-chip-list>
+  <mat-chip color="primary" selected (click)="downloadTranscript()">
+    <mat-icon aria-hidden="false">file_copy</mat-icon>
+    Download Transcripts</mat-chip
+  >
+  <mat-chip color="accent" selected (click)="viewCertificate(true)">
+    <mat-icon aria-hidden="false">file_copy</mat-icon>
+    Download Certificate</mat-chip
+  >
+</mat-chip-list>

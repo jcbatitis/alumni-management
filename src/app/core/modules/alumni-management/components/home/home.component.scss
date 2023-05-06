@@ -1,5 +1,17 @@
 @import "~/src/assets/styles/custom";
 
-mat-card {
+:host {
+  .user {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+  }
+
+  .detail {
+    text-transform: uppercase;
+  }
+
+  mat-card {
     width: 1000px;
+  }
 }

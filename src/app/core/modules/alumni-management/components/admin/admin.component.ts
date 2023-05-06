@@ -77,6 +77,8 @@ export class AdminComponent implements OnInit {
         this.studentDetail = this.listOfUsers.find(
           (student) => student.student_id === this.transcriptRecordStudentId
         );
+
+        this.viewCertificate();
       }
     });
   }

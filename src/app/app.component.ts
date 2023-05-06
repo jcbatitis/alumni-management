@@ -9,19 +9,18 @@ import { LoaderService } from './core/services/loader.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
-
   public isLoading: boolean = false;
 
-  constructor(private authenticationService: AuthenticationService,
+  constructor(
+    private authenticationService: AuthenticationService,
     private userService: UserService,
     private transcriptService: TranscriptService,
     private router: Router,
-    private loaderService: LoaderService) {
-  }
+    private loaderService: LoaderService
+  ) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('userAccessToken');
@@ -29,31 +28,40 @@ export class AppComponent implements OnInit {
     if (token) {
       this.isLoading = true;
 
-      this.authenticationService.checkIfValidSession().subscribe(auth => {
-        if (auth.status === Status.OK) {
-          this.getUserDetails(auth.email);
+      this.authenticationService.checkIfValidSession().subscribe(
+        (auth) => {
+          if (auth.status === Status.OK) {
+            this.getUserDetails(auth.email);
+          }
+        },
+        (error) => {
+          localStorage.removeItem('userAccessToken');
+          this.isLoading = false;
+          this.router.navigate(['alumni', 'login']);
         }
-      }, error => {
-        localStorage.removeItem('userAccessToken');
-        this.isLoading = false;
-        this.router.navigate(['alumni', 'login']);
-      });
+      );
     }
 
-    this.loaderService.loader$.subscribe(isLoading => {
+    this.loaderService.loader$.subscribe((isLoading) => {
       this.isLoading = isLoading;
-    })
+    });
   }
 
   private async getUserDetails(email: string): Promise<void> {
     try {
-      const userDetails = await this.userService.getUserByEmail(email).toPromise();
+      const userDetails = await this.userService
+        .getUserByEmail(email)
+        .toPromise();
       this.userService.setUserDetails(userDetails);
 
       if (userDetails.role === 'student') {
         await this.getTranscriptRecord(userDetails.student_id);
       } else if (userDetails.role === 'admin') {
         await this.getAllUsers();
+      }
+
+      if (this.router.url.includes('verification')) {
+        return;
       }
 
       this.router.navigate(['alumni', 'home']);
@@ -66,13 +74,14 @@ export class AppComponent implements OnInit {
 
   private async getTranscriptRecord(studentId: string): Promise<void> {
     try {
-      const transcripts = await this.transcriptService.getTranscriptByStudentId(studentId).toPromise();
+      const transcripts = await this.transcriptService
+        .getTranscriptByStudentId(studentId)
+        .toPromise();
       this.transcriptService.setTranscript(transcripts);
     } catch (e) {
       console.error(e);
     }
   }
-
 
   private async getAllUsers(): Promise<void> {
     try {

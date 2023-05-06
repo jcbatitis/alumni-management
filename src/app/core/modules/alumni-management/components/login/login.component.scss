@@ -1,5 +1,11 @@
 @import "~/src/assets/styles/custom";
 
-mat-card {
+:host {
+  display: flex;
+  height: 100vh;
+
+  mat-card {
     width: 400px;
+    margin: auto;
+  }
 }

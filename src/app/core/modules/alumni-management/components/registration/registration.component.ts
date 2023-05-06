@@ -52,7 +52,7 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  private studentId: string = `s${Math.floor(1000000 + Math.random() * 9000000).toString()}`;
+  private studentId: string = `S${Math.floor(1000000 + Math.random() * 9000000).toString()}`;
 
   ngOnInit(): void {
 
