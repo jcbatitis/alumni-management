@@ -1,0 +1,90 @@
+:host {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    padding: 0;
+    margin: 0;
+  }
+
+  h3 {
+    color: #7d7d7d;
+  }
+
+  mat-chip-list {
+    mat-chip {
+      cursor: pointer;
+    }
+  }
+
+  mat-card {
+    margin: 20px auto;
+
+    // mat-icon {
+    //   margin-right: 5px;
+    // }
+
+    mat-form-field {
+      margin: 10px 0 0 5px;
+    }
+
+    mat-card-header {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 10px;
+    }
+
+    mat-card-content {
+      margin-bottom: 0;
+    }
+
+    mat-card-actions {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  mat-form-field.filter {
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  mat-card.profile {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    img {
+      clip-path: circle();
+    }
+  }
+}
+
+iframe {
+  width: 100%;
+  height: 600px;
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels {
+  text-transform: uppercase;
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+  background-color: #dfd8d8;
+}
+
+::ng-deep .mat-tab-list .mat-tab-labels {
+  text-transform: uppercase;
+}

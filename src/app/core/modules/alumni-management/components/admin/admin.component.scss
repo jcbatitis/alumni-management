@@ -1,0 +1,13 @@
+@import "~/src/assets/styles/custom";
+
+:host {
+  .student {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & > h4 {
+      color: #7d7d7d;
+    }
+  }
+}

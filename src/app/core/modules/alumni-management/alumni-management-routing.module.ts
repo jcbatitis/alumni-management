@@ -4,6 +4,7 @@ import { AlumniManagementComponent } from './alumni-management.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
+import { VerificationComponent } from './components/verification/verification.component';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
         path: 'home',
         component: HomeComponent,
       },
+      {
+        path: 'verification',
+        component: VerificationComponent
+      }
     ],
   },
 ];

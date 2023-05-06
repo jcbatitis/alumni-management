@@ -1,0 +1,10 @@
+@import "~/src/assets/styles/custom";
+
+:host {
+  ::ng-deep .mat-chip-list-wrapper {
+    padding: 10px 0;
+
+    display: flex;
+    justify-content: flex-end;
+  }
+}

@@ -1,1 +1,152 @@
-<p>admin works!</p>
+<div *ngIf="studentDetail" class="student">
+  <div class="detail">
+    <h2>SELECTED STUDENT</h2>
+    <h4>
+      Name:
+      {{ studentDetail?.first_name + " " + studentDetail?.family_name }}
+    </h4>
+    <h4>ID: {{ studentDetail?.student_id }}</h4>
+  </div>
+
+  <mat-chip-list class="mat-chip-list-stacked">
+    <mat-chip color="primary" selected (click)="downloadTranscript()">
+      <mat-icon aria-hidden="false">file_copy</mat-icon>
+      Download Transcripts</mat-chip
+    >
+    <mat-chip color="accent" selected (click)="viewCertificate(true)">
+      <mat-icon aria-hidden="false">file_copy</mat-icon>
+      Download Certificate</mat-chip
+    >
+  </mat-chip-list>
+</div>
+
+<mat-tab-group [(selectedIndex)]="tabIndex">
+  <mat-tab>
+    <ng-template mat-tab-label> Student List </ng-template>
+    <mat-form-field class="filter">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyStudentFilter($event)" #input />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="studentsSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="student_id">
+        <th mat-header-cell *matHeaderCellDef>Student ID</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.student_id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="first_name">
+        <th mat-header-cell *matHeaderCellDef>First Name</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.first_name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="middle_name">
+        <th mat-header-cell *matHeaderCellDef>Middle Name</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.middle_name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="family_name">
+        <th mat-header-cell *matHeaderCellDef>Family Name</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.family_name }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef>Email</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell *matCellDef="let detail">
+          <button
+            button
+            mat-raised-button
+            [color]="
+              detail.student_id === transcriptRecordStudentId
+                ? 'primary'
+                : 'basic'
+            "
+            (click)="getTranscriptRecord(detail)"
+          >
+            {{
+              detail.student_id === transcriptRecordStudentId
+                ? "Selected"
+                : "Select"
+            }}
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="userColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: userColumns"></tr>
+    </table>
+  </mat-tab>
+
+  <mat-tab *ngIf="transcriptRecord">
+    <ng-template mat-tab-label> Transcript </ng-template>
+    <mat-form-field class="filter">
+      <mat-label>Filter</mat-label>
+      <input matInput (keyup)="applyTranscriptFilter($event)" #input />
+    </mat-form-field>
+
+    <table mat-table [dataSource]="transcriptSource" class="mat-elevation-z8">
+      <ng-container matColumnDef="units">
+        <th mat-header-cell *matHeaderCellDef>Units</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.units }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="course_code">
+        <th mat-header-cell *matHeaderCellDef>Couse Code</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.course_code }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="course_coordinator">
+        <th mat-header-cell *matHeaderCellDef>Couse Coordinator</th>
+        <td mat-cell *matCellDef="let detail">
+          {{ detail.course_coordinator }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.name }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="semester">
+        <th mat-header-cell *matHeaderCellDef>Semester</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.semester }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="year">
+        <th mat-header-cell *matHeaderCellDef>Year</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.year }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
+      </ng-container>
+
+      <ng-container matColumnDef="mark">
+        <th mat-header-cell *matHeaderCellDef>Mark</th>
+        <td mat-cell *matCellDef="let detail">{{ detail.mark }}</td>
+        <td mat-footer-cell *matFooterCellDef>GPA</td>
+      </ng-container>
+
+      <ng-container matColumnDef="grade">
+        <th mat-header-cell *matHeaderCellDef>Grade</th>
+        <td mat-cell *matCellDef="let detail">{{ getMark(detail.mark) }}</td>
+        <td mat-footer-cell *matFooterCellDef>{{ getGPA() }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    </table>
+  </mat-tab>
+
+  <mat-tab *ngIf="transcriptRecord">
+    <ng-template mat-tab-label> Certificate </ng-template>
+    <iframe [src]="studentCertificateUrl | safe : 'resourceUrl'"></iframe>
+  </mat-tab>
+</mat-tab-group>

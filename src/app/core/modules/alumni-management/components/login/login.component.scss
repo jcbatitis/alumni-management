@@ -1,17 +1,11 @@
+@import "~/src/assets/styles/custom";
+
 :host {
+  display: flex;
+  height: 100vh;
+
   mat-card {
-    margin: 20px auto;
-    max-width: 450px;
-  }
-
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .btn-group {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    width: 400px;
+    margin: auto;
   }
 }
