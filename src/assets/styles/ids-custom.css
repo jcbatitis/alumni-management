@@ -1,3 +1,16 @@
+.custom-header {
+  font-size: 12px;
+  color: black;
+  background: yellow;
+}
+
+.custom-open-tasks {
+  font-size: 12px;
+  color: black;
+  background: yellow;
+}
+
+
 .background-red {
   background: red;
 }
@@ -5,3 +18,4 @@
 .border-1px {
   border: 1px solid black;
 }
+
