@@ -238,9 +238,13 @@ export class StudentDetailsComponent implements OnInit {
       { align: 'center' }
     );
 
+    pdf.setFontSize(12);
+    
+    pdf.text('000000', 510, 825);
+
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
-    pdf.addImage(footer, 'png', 5, 550, 543, 272);
+    pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
     const fileName = `${name}_Certificate.pdf`;
 

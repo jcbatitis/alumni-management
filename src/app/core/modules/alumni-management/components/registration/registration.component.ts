@@ -40,9 +40,11 @@ export class RegistrationComponent implements OnInit {
     private _snackBar: MatSnackBar
   ) {
     this.userForm = new FormGroup({
+      studentId: new FormControl('', [Validators.required]),
       firstName: new FormControl('', [Validators.required]),
       middleName: new FormControl('', []),
       familyName: new FormControl('', [Validators.required]),
+      mobileNumber: new FormControl('', [Validators.required]),
       email: new FormControl('', [
         Validators.required,
         Validators.email,
@@ -52,7 +54,7 @@ export class RegistrationComponent implements OnInit {
     });
   }
 
-  private studentId: string = `S${Math.floor(1000000 + Math.random() * 9000000).toString()}`;
+  // private studentId: string = `S${Math.floor(1000000 + Math.random() * 9000000).toString()}`;
 
   ngOnInit(): void {
 
@@ -71,8 +73,10 @@ export class RegistrationComponent implements OnInit {
       middle_name: this.userForm.get('middleName').value,
       family_name: this.userForm.get('familyName').value,
       email: this.userForm.get('email').value,
-      student_id: this.studentId,
-      role: isAdmin ? 'admin' : 'student'
+      student_id: this.userForm.get('studentId').value,
+      mobile_number: this.userForm.get('mobileNumber').value,
+      role: isAdmin ? 'admin' : 'student',
+      certificate_id: Math.floor(1000000 + Math.random() * 9000000).toString()
     };
 
     if (isAdmin) {
@@ -192,7 +196,7 @@ export class RegistrationComponent implements OnInit {
       }
 
       const payload: Transcript = {
-        student_id: this.studentId,
+        student_id: this.userForm.get('studentId').value,
         grades: grades
       };
 

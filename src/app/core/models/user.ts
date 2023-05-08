@@ -4,7 +4,9 @@ export interface IUserDTO {
   family_name: string;
   email: string;
   student_id: string;
+  mobile_number: string;
   role: string;
+  certificate_id: string
 }
 
 export interface IAuthUserDTO {

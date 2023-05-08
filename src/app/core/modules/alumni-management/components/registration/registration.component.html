@@ -3,6 +3,11 @@
     <h1>Registration</h1>
     <form [formGroup]="userForm">
       <mat-form-field appearance="fill">
+        <mat-label>Student ID</mat-label>
+        <input matInput formControlName="studentId" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" />
       </mat-form-field>
@@ -20,6 +25,11 @@
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Mobile Number</mat-label>
+        <input matInput formControlName="mobileNumber" />
       </mat-form-field>
 
       <mat-form-field appearance="fill">
