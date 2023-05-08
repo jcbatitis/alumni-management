@@ -68,8 +68,6 @@
   color: white;
   font-size: 18px;
   padding: 15px 0;
-  display: flex;
-  justify-content: center;
 }
 
 #participant-resources-table-header {
@@ -164,6 +162,60 @@
 }
 
 #participant-closed-tasks-container
+  > app-prime-paginator
+  > .paginator-container
+  > p-paginator
+  > .p-paginator {
+  background: rgb(59, 58, 58);
+}
+/* CLOSED TASKS END*/
+
+/* CONSENTS */
+#participant-consents-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-consents-container > .header-container {
+  color: white;
+  font-size: 18px;
+  padding: 15px 0;
+}
+
+#participant-consents-table-header {
+}
+
+#participant-consents-table-header > th {
+  background: #517586;
+  color: white;
+  text-align: center;
+}
+
+#participant-consents-table-content {
+  background: #7fb7d0;
+  color: white;
+}
+
+#participant-consents-table-content > td > a {
+  color: black;
+}
+
+#participant-consents-table-click-to-change-button {
+  color: #7fb7d0 !important;
+  background: #202124;
+}
+
+#participant-consents-table-click-to-change-button:hover {
+  color: white !important;
+  background: #33343a;
+}
+
+#participant-consents-container
+  > app-prime-paginator
+  > .paginator-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-consents-container
   > app-prime-paginator
   > .paginator-container
   > p-paginator
