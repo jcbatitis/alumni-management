@@ -1,4 +1,3 @@
-
 /* WELCOME HEADER START */
 #participant-header-container {
   background: rgb(59, 58, 58);
@@ -15,7 +14,6 @@
   font-family: monospace;
 }
 /* WELCOME HEADER END */
-
 
 /* OPEN TASKS START */
 #participant-open-tasks-container {
@@ -98,9 +96,7 @@
   background: #33343a;
 }
 
-#participant-resources-container
-  > app-prime-paginator
-  > .paginator-container {
+#participant-resources-container > app-prime-paginator > .paginator-container {
   background: rgb(59, 58, 58);
 }
 
@@ -210,14 +206,8 @@
 }
 
 #participant-consents-container
-  > app-prime-paginator
-  > .paginator-container {
-  background: rgb(59, 58, 58);
-}
-
-#participant-consents-container
-  > app-prime-paginator
-  > .paginator-container
+  > p-table
+  > .default-table
   > p-paginator
   > .p-paginator {
   background: rgb(59, 58, 58);
