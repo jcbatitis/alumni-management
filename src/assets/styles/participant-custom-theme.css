@@ -100,3 +100,11 @@
   color: white!important;
   background: #33343a;
 }
+
+#participant-closed-tasks-container > app-prime-paginator > .paginator-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-closed-tasks-container > app-prime-paginator > .paginator-container > p-paginator > .p-paginator {
+  background: rgb(59, 58, 58);
+}
