@@ -1,0 +1,172 @@
+
+/* WELCOME HEADER START */
+#participant-header-container {
+  background: rgb(59, 58, 58);
+  color: white;
+}
+
+#participant-header {
+  text-align: center;
+}
+
+#participant-header-description {
+  color: #7fb7d0;
+  font-size: 15px;
+  font-family: monospace;
+}
+/* WELCOME HEADER END */
+
+
+/* OPEN TASKS START */
+#participant-open-tasks-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-open-tasks-container > .header-container {
+  color: white;
+  font-size: 18px;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+#participant-open-tasks-table-header {
+}
+
+#participant-open-tasks-table-header > th {
+  background: #517586;
+  color: white;
+  text-align: center;
+}
+
+#participant-open-tasks-table-content {
+  background: #7fb7d0;
+  color: white;
+}
+
+#participant-open-tasks-table-content > td > a {
+  color: black;
+}
+
+#participant-open-tasks-table-click-to-complete-button {
+  color: #7fb7d0 !important;
+  background: #202124;
+}
+
+#participant-open-tasks-table-click-to-complete-button:hover {
+  color: white !important;
+  background: #33343a;
+}
+/* OPEN TASKS END */
+
+/* RESOURCES START */
+#participant-resources-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-resources-container > .header-container {
+  color: white;
+  font-size: 18px;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+#participant-resources-table-header {
+}
+
+#participant-resources-table-header > th {
+  background: #517586;
+  color: white;
+  text-align: center;
+}
+
+#participant-resources-table-content {
+  background: #7fb7d0;
+  color: white;
+}
+
+#participant-resources-table-content > td > a {
+  color: black;
+}
+
+#participant-resources-table-click-to-view-button {
+  color: #7fb7d0 !important;
+  background: #202124;
+}
+
+#participant-resources-table-click-to-view-button:hover {
+  color: white !important;
+  background: #33343a;
+}
+
+#participant-resources-container
+  > app-prime-paginator
+  > .paginator-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-resources-container
+  > app-prime-paginator
+  > .paginator-container
+  > p-paginator
+  > .p-paginator {
+  background: rgb(59, 58, 58);
+}
+
+/* RESOURCES END */
+
+/* CLOSED TASKS START */
+#participant-closed-tasks-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-closed-tasks-container > .header-container {
+  color: white;
+  font-size: 18px;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+}
+
+#participant-closed-tasks-table-header {
+}
+
+#participant-closed-tasks-table-header > th {
+  background: #517586;
+  color: white;
+  text-align: center;
+}
+
+#participant-closed-tasks-table-content {
+  background: #7fb7d0;
+  color: white;
+}
+
+#participant-closed-tasks-table-content > td > a {
+  color: black;
+}
+
+#participant-closed-tasks-table-click-to-view-button {
+  color: #7fb7d0 !important;
+  background: #202124;
+}
+
+#participant-closed-tasks-table-click-to-view-button:hover {
+  color: white !important;
+  background: #33343a;
+}
+
+#participant-closed-tasks-container
+  > app-prime-paginator
+  > .paginator-container {
+  background: rgb(59, 58, 58);
+}
+
+#participant-closed-tasks-container
+  > app-prime-paginator
+  > .paginator-container
+  > p-paginator
+  > .p-paginator {
+  background: rgb(59, 58, 58);
+}
