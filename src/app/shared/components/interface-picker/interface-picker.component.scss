@@ -1,0 +1,30 @@
+:host {
+  justify-content: center;
+  gap: 20px;
+
+  div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+  }
+
+  a {
+    cursor: pointer;
+    margin: 80px 0 auto;
+  }
+
+  mat-card {
+    margin: auto;
+    width: 300px;
+
+    img {
+      object-fit: cover;
+      height: 300px;
+    }
+
+    mat-card-content {
+      text-align: center;
+    }
+  }
+}

@@ -1,6 +1,23 @@
 <mat-toolbar color="primary">
   <mat-toolbar-row>
-    <span>Alumni Dashboard</span>
-    <a (click)="logout()" *ngIf="userDetail">Log out</a>
+    <a class="logo" (click)="redirectToInterfacePicker()">
+      <img src="assets/images/emblem.png" />
+      <span>RMIT University</span>
+    </a>
+
+    <div class="links">
+      <a *ngIf="!userDetail" (click)="redirectToLogin()">Alumni Portal</a>
+      <a *ngIf="!userDetail" (click)="redirectToVerification()">Verification</a>
+      <a *ngIf="userDetail" (click)="logout()">Logout</a>
+      <!-- <a>Logout</a> -->
+
+      <!-- <div class="logout">
+        <button (click)="logout()">
+          <a title="Logout">
+            <mat-icon aria-hidden="false">logout</mat-icon>
+          </a>
+        </button>
+      </div> -->
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>

@@ -1,7 +1,45 @@
 :host {
   mat-toolbar-row {
+    background: #070758;
     display: flex;
     justify-content: space-between;
+    padding: 0px 50px;
+
+    .logo {
+      display: flex;
+      align-items: center;
+
+      img {
+        height: 90px;
+        position: absolute;
+        z-index: 2;
+        padding-top: 45px;
+      }
+
+      span {
+        padding-left: 150px;
+      }
+    }
+
+    .links {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 300;
+      height: 100%;
+
+      & > a {
+        padding: 0 30px;
+        display: flex;
+        align-items: center;
+        height: 100%;
+
+        &:hover {
+          background: #060634;
+        }
+      }
+    }
   }
 
   a {
