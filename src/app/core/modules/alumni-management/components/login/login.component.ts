@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { mergeMap, tap } from 'rxjs/operators';
-import { Authentication } from 'src/app/core/models/auth';
+import { Authentication, Status } from 'src/app/core/models/auth';
 import { IAuthUserDTO, IUserDTO } from 'src/app/core/models/user';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
 import { UserService } from '../../services/user.service';
@@ -33,6 +33,51 @@ export class LoginComponent {
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
     });
+  }
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('userAccessToken');
+
+    if (token) {
+      this.loaderService.setLoader(true);
+      this.authenticationService.checkIfValidSession().subscribe(
+        (auth) => {
+          if (auth.status === Status.OK) {
+            this.getUserDetails(auth.email);
+          }
+        },
+        (error) => {
+          localStorage.removeItem('userAccessToken');
+          this.loaderService.setLoader(false);
+          this.router.navigate(['alumni', 'login']);
+        }
+      );
+    }
+  }
+
+  private async getUserDetails(email: string): Promise<void> {
+    try {
+      const userDetails = await this.userService
+        .getUserByEmail(email)
+        .toPromise();
+      this.userService.setUserDetails(userDetails);
+
+      if (userDetails.role === 'student') {
+        await this.getTranscriptRecord(userDetails.student_id);
+      } else if (userDetails.role === 'admin') {
+        await this.getAllUsers();
+      }
+
+      if (this.router.url.includes('verification')) {
+        return;
+      }
+
+      this.router.navigate(['alumni', 'home']);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      this.loaderService.setLoader(false);
+    }
   }
 
   public async submit(): Promise<void> {
