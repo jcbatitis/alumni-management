@@ -1,0 +1,62 @@
+.backdrop {
+  background: url("/assets/images/rmit.jpg");
+  filter: grayscale(85%);
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.container {
+  //   display: flex;
+
+  .content {
+    position: absolute;
+    top: 0;
+
+    & > .rmit-logo {
+      height: 200px;
+    }
+  }
+}
+
+.content > ::ng-deep router-outlet + * {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+
+  & > app-login {
+    margin: auto;
+    width: 400px;
+  }
+
+  & > *:not(app-login) {
+    height: 100vh;
+    width: 100%;
+    overflow-y: scroll;
+  }
+
+  & > *:not(app-interface-picker) {
+  }
+
+  & > router-outlet {
+    height: 0;
+    width: 0;
+    margin: 0;
+  }
+}
+
+// .ie-flex-100 > ::ng-deep router-outlet + *:not(app-public-shell) > * {
+//   // flex-grow: 1;
+// }
+
+// .ie-flex-100 > ::ng-deep router-outlet + *:not(app-public-shell){
+//   display: flex;
+//   flex-direction: column;
+//   gap: 5px;
+//   margin: 20px;
+// }
+
+// .ie-flex-100 > ::ng-deep router-outlet + * {
+//   flex-grow: 1;
+// }

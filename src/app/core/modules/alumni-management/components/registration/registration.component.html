@@ -1,15 +1,21 @@
 <mat-card>
   <mat-card-content>
     <h1>Registration</h1>
-    <form [formGroup]="userForm">
+    <form [formGroup]="form">
       <mat-form-field appearance="fill">
-        <mat-label>Student ID</mat-label>
+        <mat-label>Student Number</mat-label>
         <input matInput formControlName="studentId" />
+        <mat-error *ngIf="form.get('studentId').hasError('required')">
+          Student Number is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>First Name</mat-label>
         <input matInput formControlName="firstName" />
+        <mat-error *ngIf="form.get('firstName').hasError('required')">
+          First Name is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
@@ -20,32 +26,49 @@
       <mat-form-field appearance="fill">
         <mat-label>Family Name</mat-label>
         <input matInput formControlName="familyName" />
+        <mat-error *ngIf="form.get('familyName').hasError('required')">
+          Family Name is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" />
+        <mat-error *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="form.get('email').hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Mobile Number</mat-label>
         <input matInput formControlName="mobileNumber" />
+        <mat-error *ngIf="form.get('mobileNumber').hasError('required')">
+          Mobile Number is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="form.get('password').hasError('required')">
+          Password is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Confirm Password</mat-label>
         <input matInput type="password" formControlName="confirmPassword" />
+        <mat-error *ngIf="form.get('confirmPassword').hasError('required')">
+          Confirm Password is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <div class="btn-group">
         <button mat-raised-button color="accent" (click)="redirectToLogin()">Back To Login</button>
         <button mat-raised-button color="primary" (click)="submit()">Register</button>
-        <!-- <button mat-raised-button color="primary" (click)="submit(true)">Create Admin</button> -->
       </div>
     </form>
   </mat-card-content>

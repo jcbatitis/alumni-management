@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { TranscriptService } from 'src/app/core/services/transcript.service';
+import { DocumentService } from 'src/app/core/services/document.service';
 import { UserService } from '../../services/user.service';
 import jsPDF, { jsPDFOptions } from 'jspdf';
 import { IUserDTO } from 'src/app/core/models/user';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from 'src/app/core/services/loader.service';
+import { Certificate } from 'src/app/core/models/certificate';
+import { mergeMap, tap } from 'rxjs/operators';
+import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
 
 @Component({
   selector: 'app-verification',
@@ -16,37 +19,37 @@ export class VerificationComponent {
   public form: FormGroup;
   public userDetail: IUserDTO;
   public studentCertificateUrl: string;
+  public studentId: string;
+  public certificateId: string;
 
   constructor(
-    private transcriptService: TranscriptService,
+    private transcriptService: DocumentService,
     private userService: UserService,
     private _snackBar: MatSnackBar,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private documentService: DocumentService
   ) {
     this.form = new FormGroup({
-      studentId: new FormControl('', [Validators.required]),
+      certificateId: new FormControl('', [Validators.required]),
     });
   }
 
   public async verify(): Promise<void> {
-    try {
-      this.loaderService.setLoader(true);
-      const studentId = this.form.get('studentId').value;
-      this.userDetail = await this.userService
-        .getUserById(studentId)
-        .toPromise();
-
-      this.viewCertificate();
-    } catch (e) {
-      this._snackBar.open('Student not found', null, {
-        duration: 3000,
+    this.loaderService.setLoader(true);
+    this.documentService
+      .getCertificateById(this.form.get('certificateId').value)
+      .pipe(
+        tap((details: Certificate) => {
+          this.studentId = details.student_id;
+          this.certificateId = details.certificate_id;
+        }),
+        mergeMap(() => this.userService.getUserById(this.studentId))
+      )
+      .subscribe((user: IUserDTO) => {
+        this.userDetail = user;
+        this.viewCertificate();
+        this.loaderService.setLoader(false);
       });
-
-      this.userDetail = null;
-      this.studentCertificateUrl = null;
-    } finally {
-      this.loaderService.setLoader(false);
-    }
   }
 
   public viewCertificate(download: boolean = false): void {
@@ -103,12 +106,14 @@ export class VerificationComponent {
       { align: 'center' }
     );
 
+    pdf.setFontSize(12);
+    pdf.text(this.userDetail.certificate_id, 510, 825);
+
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
-    pdf.addImage(footer, 'png', 5, 550, 543, 272);
+    pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${name}_Certificate.pdf`;
-
+    const fileName = `${this.userDetail.first_name}_${this.userDetail.family_name}_${this.certificateId}.pdf`;
     pdf.setProperties({
       title: fileName,
     });
@@ -117,9 +122,11 @@ export class VerificationComponent {
 
     if (download) {
       pdf.save(fileName);
-      this._snackBar.open('Successfully downloaded certificate', null, {
-        duration: 3000,
-      });
+      this._snackBar.open(
+        'Successfully downloaded certificate',
+        null,
+        SUCCESS_SNACKBAR_OPTION
+      );
     }
   }
 }

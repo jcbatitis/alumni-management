@@ -3,10 +3,11 @@ import { MatTableDataSource } from '@angular/material/table';
 import { IUserDTO } from 'src/app/core/models/user';
 import { UserService } from '../../services/user.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { TranscriptService } from 'src/app/core/services/transcript.service';
+import { DocumentService } from 'src/app/core/services/document.service';
 import jsPDF, { jsPDFOptions } from 'jspdf';
-import { Grade } from 'src/app/core/models/transcript';
+import { Grade, Transcript } from 'src/app/core/models/transcript';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
 
 @Component({
   selector: 'app-admin',
@@ -17,7 +18,7 @@ export class AdminComponent implements OnInit {
   constructor(
     private userService: UserService,
     private loaderService: LoaderService,
-    private transcriptService: TranscriptService,
+    private transcriptService: DocumentService,
     private _snackBar: MatSnackBar
   ) {}
 
@@ -45,8 +46,9 @@ export class AdminComponent implements OnInit {
   public listOfUsers: IUserDTO[];
   public userDetail: IUserDTO;
   public tabIndex: number = 1;
+  public transcripts: Transcript;
   private transcriptRecordStudentId: string;
-  public transcriptRecord: Grade[];
+  public transcriptGrades: Grade[];
 
   public studentDetail: IUserDTO;
   public studentCertificateUrl: string;
@@ -69,8 +71,9 @@ export class AdminComponent implements OnInit {
 
     this.transcriptService.transcriptsLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
-        this.transcriptRecord = this.transcriptService.userTranscript.grades;
-        this.transcriptSource = new MatTableDataSource(this.transcriptRecord);
+        this.transcripts = this.transcriptService.userTranscript;
+        this.transcriptGrades = this.transcriptService.userTranscript.grades;
+        this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
         this.transcriptRecordStudentId =
           this.transcriptService.userTranscript.student_id;
 
@@ -161,7 +164,7 @@ export class AdminComponent implements OnInit {
     pdf.setFontSize(12);
 
     let yAxis = 270;
-    this.transcriptRecord.forEach((record, index) => {
+    this.transcriptGrades.forEach((record, index) => {
       yAxis += 20;
 
       if (index === 0) {
@@ -186,9 +189,11 @@ export class AdminComponent implements OnInit {
     pdf.text('End of Academic Record', 30, 700);
     pdf.save(`${name}_Transcripts.pdf`);
 
-    this._snackBar.open('Successfully downloaded transcripts', null, {
-      duration: 3000,
-    });
+    this._snackBar.open(
+      'Successfully downloaded transcripts',
+      null,
+      SUCCESS_SNACKBAR_OPTION
+    );
   }
 
   public getGPA(): string {
@@ -203,7 +208,7 @@ export class AdminComponent implements OnInit {
     let total = 0;
     let totalUnits = 0;
 
-    this.transcriptRecord?.forEach((record) => {
+    this.transcriptGrades?.forEach((record) => {
       const creditPointxGradePointValue =
         parseInt(record.units) *
         gpv.find((val) => val.mark === this.getMark(parseInt(record.mark))).gpv;
@@ -272,11 +277,14 @@ export class AdminComponent implements OnInit {
       { align: 'center' }
     );
 
+    pdf.setFontSize(12);
+    pdf.text(this.transcripts.certificate_id, 510, 825);
+
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
-    pdf.addImage(footer, 'png', 5, 550, 543, 272);
+    pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${name}_Certificate.pdf`;
+    const fileName = `${studentTranscript.first_name}_${studentTranscript.family_name}_${this.transcripts.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,
@@ -286,9 +294,11 @@ export class AdminComponent implements OnInit {
 
     if (download) {
       pdf.save(fileName);
-      this._snackBar.open('Successfully downloaded certificate', null, {
-        duration: 3000,
-      });
+      this._snackBar.open(
+        'Successfully downloaded certificate',
+        null,
+        SUCCESS_SNACKBAR_OPTION
+      );
     }
   }
 

@@ -3,7 +3,7 @@ import { AuthenticationService } from './core/services/authentication.service';
 import { Status } from './core/models/auth';
 import { UserService } from './core/modules/alumni-management/services/user.service';
 import { Router } from '@angular/router';
-import { TranscriptService } from './core/services/transcript.service';
+import { DocumentService } from './core/services/document.service';
 import { LoaderService } from './core/services/loader.service';
 
 @Component({
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private transcriptService: TranscriptService,
+    private transcriptService: DocumentService,
     private router: Router,
     private loaderService: LoaderService
   ) {}

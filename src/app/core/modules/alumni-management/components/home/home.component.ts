@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '../../services/user.service';
 import { IUserDTO } from 'src/app/core/models/user';
 import { LoaderService } from 'src/app/core/services/loader.service';
-import { TranscriptService } from 'src/app/core/services/transcript.service';
+import { DocumentService } from 'src/app/core/services/document.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
     private userService: UserService,
     private _snackBar: MatSnackBar,
     private loaderService: LoaderService,
-    private transcriptService: TranscriptService
+    private transcriptService: DocumentService
   ) {}
   public userDetail: IUserDTO;
 

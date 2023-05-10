@@ -81,7 +81,7 @@
     </table>
   </mat-tab>
 
-  <mat-tab *ngIf="transcriptRecord">
+  <mat-tab *ngIf="transcriptGrades">
     <ng-template mat-tab-label> Transcript </ng-template>
     <mat-form-field class="filter">
       <mat-label>Filter</mat-label>
@@ -145,7 +145,7 @@
     </table>
   </mat-tab>
 
-  <mat-tab *ngIf="transcriptRecord">
+  <mat-tab *ngIf="transcriptGrades">
     <ng-template mat-tab-label> Certificate </ng-template>
     <iframe [src]="studentCertificateUrl | safe : 'resourceUrl'"></iframe>
   </mat-tab>

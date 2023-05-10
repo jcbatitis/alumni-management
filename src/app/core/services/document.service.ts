@@ -3,11 +3,12 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Transcript } from '../models/transcript';
+import { Certificate } from '../models/certificate';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TranscriptService {
+export class DocumentService {
   constructor(private http: HttpClient) {}
 
   private baseURL: string = environment.baseURL;
@@ -37,12 +38,34 @@ export class TranscriptService {
       headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
     };
 
-    const url = `${this.baseURL}/Transcript/CreateTranscript`;
+    const url = `${this.baseURL}/Document/CreateTranscript`;
     return this.http.post(url, transcript, options);
   }
 
   public getTranscriptByStudentId(studentId: string): Observable<any> {
-    const url = `${this.baseURL}/Transcript/GetTranscriptById/${studentId}`;
+    const url = `${this.baseURL}/Document/GetTranscriptById/${studentId}`;
     return this.http.get(url);
   }
+
+  public createCertificate(certificate: Certificate): Observable<any> {
+    const token = localStorage.getItem('userAccessToken');
+
+    if (!token) {
+      return;
+    }
+
+    var options = {
+      headers: new HttpHeaders().set('Authorization', `Bearer ${token}`),
+    };
+
+    const url = `${this.baseURL}/Document/CreateCertificate`;
+    return this.http.post(url, certificate, options);
+  }
+
+  public getCertificateById(id: string): Observable<any> {
+    const url = `${this.baseURL}/Document/GetCertificateById/${id}`;
+    return this.http.get(url);
+  }
+
+
 }

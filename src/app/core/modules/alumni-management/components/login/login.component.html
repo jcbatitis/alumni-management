@@ -1,15 +1,24 @@
 <mat-card>
   <mat-card-content class="login">
     <h1>Login</h1>
-    <form [formGroup]="loginForm">
+    <form [formGroup]="form">
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput formControlName="email" />
+        <mat-error *ngIf="form.get('email').hasError('email') && !form.get('email').hasError('required')">
+          Please enter a valid email address
+        </mat-error>
+        <mat-error *ngIf="form.get('email').hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="fill">
         <mat-label>Password</mat-label>
         <input matInput type="password" formControlName="password" />
+        <mat-error *ngIf="form.get('password').hasError('required')">
+          Password <strong>required</strong>
+        </mat-error>
       </mat-form-field>
     </form>
   </mat-card-content>

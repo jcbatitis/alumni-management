@@ -14,3 +14,4 @@ export interface IAuthUserDTO {
   password: string;
   returnSecureToken: boolean;
 }
+

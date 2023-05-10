@@ -1,14 +1,15 @@
 import { Component, OnInit, SecurityContext } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Grade } from 'src/app/core/models/transcript';
+import { Grade, Transcript } from 'src/app/core/models/transcript';
 import { UserService } from '../../services/user.service';
 import { IUserDTO } from 'src/app/core/models/user';
-import { TranscriptService } from 'src/app/core/services/transcript.service';
+import { DocumentService } from 'src/app/core/services/document.service';
 import jsPDF, { jsPDFOptions } from 'jspdf';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -19,12 +20,13 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class StudentDetailsComponent implements OnInit {
   constructor(
     private userService: UserService,
-    private transcriptService: TranscriptService,
-    private _snackBar: MatSnackBar,
+    private transcriptService: DocumentService,
+    private _snackBar: MatSnackBar
   ) {}
 
   public transcriptSource: MatTableDataSource<Grade>;
-  public transcriptRecord: Grade[];
+  public transcriptGrades: Grade[];
+  public transcripts: Transcript;
   public displayedColumns: string[] = [
     'year',
     'course_code',
@@ -42,14 +44,15 @@ export class StudentDetailsComponent implements OnInit {
     this.userService.userDetailsLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
         this.userDetail = this.userService.userDetail;
-        this.viewCertificate();
       }
     });
 
     this.transcriptService.transcriptsLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
-        this.transcriptRecord = this.transcriptService.userTranscript.grades;
-        this.transcriptSource = new MatTableDataSource(this.transcriptRecord);
+        this.transcripts = this.transcriptService.userTranscript;
+        this.transcriptGrades = this.transcriptService.userTranscript.grades;
+        this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
+        this.viewCertificate();
       }
     });
   }
@@ -71,7 +74,7 @@ export class StudentDetailsComponent implements OnInit {
     let total = 0;
     let totalUnits = 0;
 
-    this.transcriptRecord?.forEach((record) => {
+    this.transcriptGrades?.forEach((record) => {
       const creditPointxGradePointValue =
         parseInt(record.units) *
         gpv.find((val) => val.mark === this.getMark(parseInt(record.mark))).gpv;
@@ -154,7 +157,7 @@ export class StudentDetailsComponent implements OnInit {
     pdf.setFontSize(12);
 
     let yAxis = 270;
-    this.transcriptRecord.forEach((record, index) => {
+    this.transcriptGrades.forEach((record, index) => {
       yAxis += 20;
 
       if (index === 0) {
@@ -179,9 +182,11 @@ export class StudentDetailsComponent implements OnInit {
     pdf.text('End of Academic Record', 30, 700);
     pdf.save(`${name}_Transcripts.pdf`);
 
-    this._snackBar.open('Successfully downloaded transcripts', null, {
-      duration: 3000,
-    });
+    this._snackBar.open(
+      'Successfully downloaded transcripts',
+      null,
+      SUCCESS_SNACKBAR_OPTION
+    );
   }
 
   public viewCertificate(download: boolean = false): void {
@@ -239,14 +244,13 @@ export class StudentDetailsComponent implements OnInit {
     );
 
     pdf.setFontSize(12);
-    
-    pdf.text('000000', 510, 825);
+    pdf.text(this.transcripts.certificate_id, 510, 825);
 
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
     pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${name}_Certificate.pdf`;
+    const fileName = `${this.userDetail.first_name}_${this.userDetail.family_name}_${this.transcripts.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,
@@ -256,9 +260,11 @@ export class StudentDetailsComponent implements OnInit {
 
     if (download) {
       pdf.save(fileName);
-      this._snackBar.open('Successfully downloaded certificate', null, {
-        duration: 3000,
-      });
+      this._snackBar.open(
+        'Successfully downloaded certificate',
+        null,
+        SUCCESS_SNACKBAR_OPTION
+      );
     }
   }
 }
