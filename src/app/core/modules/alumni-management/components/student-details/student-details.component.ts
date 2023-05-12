@@ -10,6 +10,7 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
+import { Certificate } from 'src/app/core/models/certificate';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -20,13 +21,14 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class StudentDetailsComponent implements OnInit {
   constructor(
     private userService: UserService,
-    private transcriptService: DocumentService,
+    private documentService: DocumentService,
     private _snackBar: MatSnackBar
   ) {}
 
   public transcriptSource: MatTableDataSource<Grade>;
   public transcriptGrades: Grade[];
   public transcripts: Transcript;
+  public certificate: Certificate;
   public displayedColumns: string[] = [
     'year',
     'course_code',
@@ -47,10 +49,16 @@ export class StudentDetailsComponent implements OnInit {
       }
     });
 
-    this.transcriptService.transcriptsLoaded$.subscribe((isLoaded) => {
+    this.documentService.certificateLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
-        this.transcripts = this.transcriptService.userTranscript;
-        this.transcriptGrades = this.transcriptService.userTranscript.grades;
+        this.certificate = this.documentService.userCertificate;
+      }
+    });
+
+    this.documentService.transcriptsLoaded$.subscribe((isLoaded) => {
+      if (isLoaded) {
+        this.transcripts = this.documentService.userTranscript;
+        this.transcriptGrades = this.documentService.userTranscript.grades;
         this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
         this.viewCertificate();
       }
@@ -140,7 +148,7 @@ export class StudentDetailsComponent implements OnInit {
     pdf.text(name, 30, 150);
     pdf.text('Student Number', 30, 170);
 
-    const student_id = this.userDetail.student_id;
+    const student_id = this.userDetail.id;
     pdf.text(student_id, 150, 170);
 
     pdf.text('Masters of Information Technology', 30, 210);
@@ -244,13 +252,13 @@ export class StudentDetailsComponent implements OnInit {
     );
 
     pdf.setFontSize(12);
-    pdf.text(this.transcripts.certificate_id, 510, 825);
+    pdf.text(this.certificate.certificate_id, 510, 825);
 
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
     pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${this.userDetail.first_name}_${this.userDetail.family_name}_${this.transcripts.certificate_id}.pdf`;
+    const fileName = `${this.userDetail.first_name}_${this.userDetail.family_name}_${this.certificate.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,

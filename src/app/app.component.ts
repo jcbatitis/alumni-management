@@ -17,7 +17,7 @@ export class AppComponent implements OnInit {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private transcriptService: DocumentService,
+    private documentService: DocumentService,
     private router: Router,
     private loaderService: LoaderService
   ) {}
@@ -55,7 +55,8 @@ export class AppComponent implements OnInit {
       this.userService.setUserDetails(userDetails);
 
       if (userDetails.role === 'student') {
-        await this.getTranscriptRecord(userDetails.student_id);
+        await this.getTranscriptRecord(userDetails.id);
+        await this.getCertficateRecord(userDetails.id);
       } else if (userDetails.role === 'admin') {
         await this.getAllUsers();
       }
@@ -74,10 +75,10 @@ export class AppComponent implements OnInit {
 
   private async getTranscriptRecord(studentId: string): Promise<void> {
     try {
-      const transcripts = await this.transcriptService
+      const transcripts = await this.documentService
         .getTranscriptByStudentId(studentId)
         .toPromise();
-      this.transcriptService.setTranscript(transcripts);
+      this.documentService.setTranscript(transcripts);
     } catch (e) {
       console.error(e);
     }
@@ -88,6 +89,15 @@ export class AppComponent implements OnInit {
       const users = await this.userService.getUsers().toPromise();
       this.userService.setUsers(users);
     } catch (e) {
+      console.error(e);
+    }
+  }
+
+  private async getCertficateRecord(studentId: string): Promise<void> {
+    try {
+      const certificate = await this.documentService.getCertificateByStudentId(studentId).toPromise();
+      this.documentService.setCertificate(certificate);
+    } catch(e) {
       console.error(e);
     }
   }

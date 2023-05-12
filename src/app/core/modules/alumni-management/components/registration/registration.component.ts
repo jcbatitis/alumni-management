@@ -103,14 +103,13 @@ export class RegistrationComponent implements OnInit {
       middle_name: this.form.get('middleName').value,
       family_name: this.form.get('familyName').value,
       email: this.form.get('email').value,
-      student_id: this.form.get('studentId').value,
+      id: this.form.get('studentId').value,
       mobile_number: this.form.get('mobileNumber').value,
       role: isAdmin ? 'admin' : 'student',
-      certificate_id: this.transcriptId,
     };
 
     if (isAdmin) {
-      delete payload.student_id;
+      delete payload.id;
     }
 
     this.loaderService.setLoader(true);
@@ -258,7 +257,6 @@ export class RegistrationComponent implements OnInit {
     }
 
     const transcriptPayload: Transcript = {
-      certificate_id: this.transcriptId,
       student_id: this.form.get('studentId').value,
       grades: grades,
     };

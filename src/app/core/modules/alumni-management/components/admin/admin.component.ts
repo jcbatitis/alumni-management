@@ -8,6 +8,7 @@ import jsPDF, { jsPDFOptions } from 'jspdf';
 import { Grade, Transcript } from 'src/app/core/models/transcript';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
+import { Certificate } from 'src/app/core/models/certificate';
 
 @Component({
   selector: 'app-admin',
@@ -18,7 +19,7 @@ export class AdminComponent implements OnInit {
   constructor(
     private userService: UserService,
     private loaderService: LoaderService,
-    private transcriptService: DocumentService,
+    private documentService: DocumentService,
     private _snackBar: MatSnackBar
   ) {}
 
@@ -52,6 +53,7 @@ export class AdminComponent implements OnInit {
 
   public studentDetail: IUserDTO;
   public studentCertificateUrl: string;
+  public certificate: Certificate;
 
   ngOnInit(): void {
     this.userService.allUsersLoaded$.subscribe((isLoaded) => {
@@ -69,19 +71,25 @@ export class AdminComponent implements OnInit {
       }
     });
 
-    this.transcriptService.transcriptsLoaded$.subscribe((isLoaded) => {
+    this.documentService.transcriptsLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
-        this.transcripts = this.transcriptService.userTranscript;
-        this.transcriptGrades = this.transcriptService.userTranscript.grades;
+        this.transcripts = this.documentService.userTranscript;
+        this.transcriptGrades = this.documentService.userTranscript.grades;
         this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
         this.transcriptRecordStudentId =
-          this.transcriptService.userTranscript.student_id;
+          this.documentService.userTranscript.student_id;
 
         this.studentDetail = this.listOfUsers.find(
-          (student) => student.student_id === this.transcriptRecordStudentId
+          (student) => student.id === this.transcriptRecordStudentId
         );
 
         this.viewCertificate();
+      }
+    });
+
+    this.documentService.certificateLoaded$.subscribe((isLoaded) => {
+      if (isLoaded) {
+        this.certificate = this.documentService.userCertificate;
       }
     });
   }
@@ -99,15 +107,23 @@ export class AdminComponent implements OnInit {
   public async getTranscriptRecord(student: IUserDTO): Promise<void> {
     try {
       this.loaderService.setLoader(true);
-      const transcripts = await this.transcriptService
-        .getTranscriptByStudentId(student.student_id)
+      const transcripts = await this.documentService
+        .getTranscriptByStudentId(student.id)
         .toPromise();
-      this.transcriptService.setTranscript(transcripts);
+      this.documentService.setTranscript(transcripts);
     } catch (e) {
       console.error(e);
     } finally {
       this.tabChange();
       this.loaderService.setLoader(false);
+    }
+  }
+
+  private async getCertficateRecord(studentId: string): Promise<void> {
+    try {
+      const certificate = await this.documentService.getCertificateByStudentId(studentId).toPromise();
+    } catch(e) {
+      console.error(e);
     }
   }
 
@@ -140,7 +156,7 @@ export class AdminComponent implements OnInit {
 
     let name = '';
     const studentTranscript = this.listOfUsers.find(
-      (user) => user.student_id === this.transcriptRecordStudentId
+      (user) => user.id === this.transcriptRecordStudentId
     );
     name = `${studentTranscript.first_name} ${studentTranscript.family_name}`;
 
@@ -252,7 +268,7 @@ export class AdminComponent implements OnInit {
 
     let name = '';
     const studentTranscript = this.listOfUsers.find(
-      (user) => user.student_id === this.transcriptRecordStudentId
+      (user) => user.id === this.transcriptRecordStudentId
     );
     name = `${studentTranscript.first_name} ${studentTranscript.family_name}`;
 
@@ -278,13 +294,13 @@ export class AdminComponent implements OnInit {
     );
 
     pdf.setFontSize(12);
-    pdf.text(this.transcripts.certificate_id, 510, 825);
+    pdf.text(this.certificate.certificate_id, 510, 825);
 
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
     pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${studentTranscript.first_name}_${studentTranscript.family_name}_${this.transcripts.certificate_id}.pdf`;
+    const fileName = `${studentTranscript.first_name}_${studentTranscript.family_name}_${this.certificate.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,

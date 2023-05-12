@@ -107,7 +107,7 @@ export class VerificationComponent {
     );
 
     pdf.setFontSize(12);
-    pdf.text(this.userDetail.certificate_id, 510, 825);
+    pdf.text(this.certificateId, 510, 825);
 
     var footer = new Image();
     footer.src = './assets/images/rmit.png';

@@ -15,8 +15,13 @@ export class DocumentService {
 
   private transcriptDTO: Transcript;
 
+  private certificateDTO: Certificate;
+
   public transcriptsLoaded$: BehaviorSubject<Transcript> =
     new BehaviorSubject<Transcript>(null);
+
+  public certificateLoaded$: BehaviorSubject<Certificate> =
+    new BehaviorSubject<Certificate>(null);
 
   public get userTranscript(): Transcript {
     return this.transcriptDTO;
@@ -25,6 +30,15 @@ export class DocumentService {
   public setTranscript(transcript: Transcript): void {
     this.transcriptDTO = transcript;
     this.transcriptsLoaded$.next(transcript);
+  }
+
+  public get userCertificate(): Certificate {
+    return this.certificateDTO;
+  }
+
+  public setCertificate(certificate: Certificate): void {
+    this.certificateDTO = certificate;
+    this.certificateLoaded$.next(certificate);
   }
 
   public createTranscript(transcript: Transcript): Observable<any> {
@@ -67,5 +81,8 @@ export class DocumentService {
     return this.http.get(url);
   }
 
-
+  public getCertificateByStudentId(studentId: string): Observable<any> {
+    const url = `${this.baseURL}/Document/GetCertificateByStudentId/${studentId}`;
+    return this.http.get(url);
+  }
 }

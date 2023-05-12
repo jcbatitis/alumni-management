@@ -2,7 +2,6 @@
 export interface Transcript {
     student_id: string;
     grades: Grade[];
-    certificate_id: string;
 }
 
 export interface Grade {

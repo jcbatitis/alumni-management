@@ -63,7 +63,7 @@ export class LoginComponent {
       this.userService.setUserDetails(userDetails);
 
       if (userDetails.role === 'student') {
-        await this.getTranscriptRecord(userDetails.student_id);
+        await this.getTranscriptRecord(userDetails.id);
       } else if (userDetails.role === 'admin') {
         await this.getAllUsers();
       }
@@ -114,7 +114,7 @@ export class LoginComponent {
           this.userService.setUserDetails(user);
 
           if (user.role === 'student') {
-            this.getTranscriptRecord(user.student_id);
+            this.getTranscriptRecord(user.id);
           } else if (user.role === 'admin') {
             this.getAllUsers();
           }
