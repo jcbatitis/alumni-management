@@ -8,7 +8,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { Certificate } from 'src/app/core/models/certificate';
 import { mergeMap, tap } from 'rxjs/operators';
-import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
+import {
+  ERROR_SNACKBAR_OPTION,
+  SUCCESS_SNACKBAR_OPTION,
+} from 'src/app/core/models/snackbar';
 
 @Component({
   selector: 'app-verification',
@@ -35,6 +38,18 @@ export class VerificationComponent {
   }
 
   public async verify(): Promise<void> {
+    if (this.form.invalid) {
+      this.form.markAllAsTouched();
+
+      this._snackBar.open(
+        'Please fill in the required details',
+        null,
+        ERROR_SNACKBAR_OPTION
+      );
+
+      return;
+    }
+
     this.loaderService.setLoader(true);
     this.documentService
       .getCertificateById(this.form.get('certificateId').value)
@@ -45,9 +60,21 @@ export class VerificationComponent {
         }),
         mergeMap(() => this.userService.getUserById(this.studentId))
       )
-      .subscribe((user: IUserDTO) => {
-        this.userDetail = user;
-        this.viewCertificate();
+      .subscribe(
+        (user: IUserDTO) => {
+          this.userDetail = user;
+          this.viewCertificate();
+        },
+        (error) => {
+          this._snackBar.open(
+            'Invalid Certificate ID',
+            null,
+            ERROR_SNACKBAR_OPTION
+          );
+          console.log(error);
+        }
+      )
+      .add(() => {
         this.loaderService.setLoader(false);
       });
   }

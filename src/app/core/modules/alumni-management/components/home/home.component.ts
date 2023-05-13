@@ -5,6 +5,7 @@ import { UserService } from '../../services/user.service';
 import { IUserDTO } from 'src/app/core/models/user';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { DocumentService } from 'src/app/core/services/document.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-home',
@@ -17,12 +18,13 @@ export class HomeComponent implements OnInit {
     private userService: UserService,
     private _snackBar: MatSnackBar,
     private loaderService: LoaderService,
-    private transcriptService: DocumentService
+    private transcriptService: DocumentService,
+    private cookieService: CookieService
   ) {}
   public userDetail: IUserDTO;
 
   ngOnInit(): void {
-    const token = localStorage.getItem('userAccessToken');
+    const token = this.cookieService.get('userAccessToken');
     if (!token) {
       this.router.navigate(['alumni', 'login']);
     }
@@ -38,10 +40,10 @@ export class HomeComponent implements OnInit {
     this.loaderService.setLoader(true);
 
     setTimeout(() => {
-      localStorage.removeItem('userAccessToken');
+      this.cookieService.delete('userAccessToken', '/');
       this.userService.setUserDetails(null);
       this.userService.setUsers(null);
-      this.transcriptService.setTranscript(null);
+      this.transcriptService.setUserDocument(null);
 
       this.router.navigate(['alumni', 'login']);
       this.loaderService.setLoader(false);

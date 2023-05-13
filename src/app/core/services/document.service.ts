@@ -4,45 +4,34 @@ import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Transcript } from '../models/transcript';
 import { Certificate } from '../models/certificate';
+import { UserDocument } from '../models/document';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DocumentService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,
+    private cookieService: CookieService) {}
 
   private baseURL: string = environment.baseURL;
 
-  private transcriptDTO: Transcript;
+  private documentDTO: UserDocument;
 
-  private certificateDTO: Certificate;
+  public documentLoaded$: BehaviorSubject<UserDocument> =
+    new BehaviorSubject<UserDocument>(null);
 
-  public transcriptsLoaded$: BehaviorSubject<Transcript> =
-    new BehaviorSubject<Transcript>(null);
-
-  public certificateLoaded$: BehaviorSubject<Certificate> =
-    new BehaviorSubject<Certificate>(null);
-
-  public get userTranscript(): Transcript {
-    return this.transcriptDTO;
+  public get userDocuments(): UserDocument {
+    return this.documentDTO;
   }
 
-  public setTranscript(transcript: Transcript): void {
-    this.transcriptDTO = transcript;
-    this.transcriptsLoaded$.next(transcript);
-  }
-
-  public get userCertificate(): Certificate {
-    return this.certificateDTO;
-  }
-
-  public setCertificate(certificate: Certificate): void {
-    this.certificateDTO = certificate;
-    this.certificateLoaded$.next(certificate);
+  public setUserDocument(document: UserDocument): void {
+    this.documentDTO = document;
+    this.documentLoaded$.next(document);
   }
 
   public createTranscript(transcript: Transcript): Observable<any> {
-    const token = localStorage.getItem('userAccessToken');
+    const token = this.cookieService.get('userAccessToken');
 
     if (!token) {
       return;
@@ -62,7 +51,7 @@ export class DocumentService {
   }
 
   public createCertificate(certificate: Certificate): Observable<any> {
-    const token = localStorage.getItem('userAccessToken');
+    const token = this.cookieService.get('userAccessToken');
 
     if (!token) {
       return;

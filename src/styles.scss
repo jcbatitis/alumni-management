@@ -37,12 +37,26 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
   src: url("assets/fonts/VarelaRound-Regular.ttf"); /*URL to font*/
 }
 
+@font-face {
+  font-family: "Museo500"; /*a name to be used later*/
+  src: url("assets/fonts/Museo-500.otf"); /*URL to font*/
+}
+
+html,
+body {
+  height: 100%;
+}
+
 body {
   padding: 0;
   margin: 0;
-  height: 100%;
-  overflow: hidden;
-  font-family: "varela";
+  font-family: "Museo500";
+
+  background: url("/assets/images/rmit.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 mat-card {

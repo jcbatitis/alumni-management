@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { IUserDTO } from 'src/app/core/models/user';
 import { environment } from 'src/environments/environment';
@@ -21,7 +22,7 @@ export class UserService {
     IUserDTO[]
   >(null);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   public get userList(): IUserDTO[] {
     return this.users;
@@ -42,7 +43,7 @@ export class UserService {
   }
 
   public getUsers(): Observable<IUserDTO[]> {
-    const token = localStorage.getItem('userAccessToken');
+    const token = this.cookieService.get('userAccessToken');
 
     if (!token) {
       return;
@@ -57,7 +58,7 @@ export class UserService {
   }
 
   public getUserByEmail(email: string): Observable<IUserDTO> {
-    const token = localStorage.getItem('userAccessToken');
+    const token = this.cookieService.get('userAccessToken');
 
     if (!token) {
       return;

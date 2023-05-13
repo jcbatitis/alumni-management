@@ -1,6 +1,6 @@
 <mat-card class="profile">
   <div class="user">
-    <img height="80px" width="80px" src="assets/images/profile.png" />
+    <img height="80px" width="80px" src="assets/images/blank_face.jpg" />
     <div class="detail">
       <h1>Hi there!</h1>
       <h3>To verify a certificate, please enter the CERTIFICATE ID</h3>
@@ -14,6 +14,9 @@
       <mat-form-field appearance="fill">
         <mat-label>Certificate ID</mat-label>
         <input matInput formControlName="certificateId" />
+        <mat-error *ngIf="form.get('certificateId').hasError('required')">
+          Certificate ID is <strong>required</strong>
+        </mat-error>
       </mat-form-field>
 
       <button mat-raised-button color="primary">Verify</button>

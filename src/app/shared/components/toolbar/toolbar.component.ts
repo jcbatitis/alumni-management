@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { IUserDTO } from 'src/app/core/models/user';
 import { UserService } from 'src/app/core/modules/alumni-management/services/user.service';
 import { AuthenticationService } from 'src/app/core/services/authentication.service';
@@ -17,7 +18,8 @@ export class ToolbarComponent implements OnInit {
     private userService: UserService,
     private transcriptService: DocumentService,
     private router: Router,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private cookieService: CookieService
   ) {}
 
   public userDetail: IUserDTO;
@@ -32,10 +34,10 @@ export class ToolbarComponent implements OnInit {
     this.loaderService.setLoader(true);
 
     setTimeout(() => {
-      localStorage.removeItem('userAccessToken');
+      this.cookieService.delete('userAccessToken', '/');
       this.userService.setUserDetails(null);
       this.userService.setUsers(null);
-      this.transcriptService.setTranscript(null);
+      this.transcriptService.setUserDocument(null);
 
       this.router.navigate(['alumni', 'login']);
       this.loaderService.setLoader(false);

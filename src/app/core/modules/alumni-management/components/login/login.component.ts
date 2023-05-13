@@ -10,6 +10,11 @@ import { DocumentService } from 'src/app/core/services/document.service';
 import { LoaderService } from 'src/app/core/services/loader.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ERROR_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
+import { forkJoin } from 'rxjs';
+import { Certificate } from 'src/app/core/models/certificate';
+import { Transcript } from 'src/app/core/models/transcript';
+import { UserDocument } from 'src/app/core/models/document';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-login',
@@ -24,10 +29,11 @@ export class LoginComponent {
   constructor(
     private authenticationService: AuthenticationService,
     private userService: UserService,
-    private transcriptService: DocumentService,
+    private documentService: DocumentService,
     private router: Router,
     private loaderService: LoaderService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private cookieService: CookieService
   ) {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
@@ -36,7 +42,7 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
-    const token = localStorage.getItem('userAccessToken');
+    const token = this.cookieService.get('userAccessToken');
 
     if (token) {
       this.loaderService.setLoader(true);
@@ -47,9 +53,10 @@ export class LoginComponent {
           }
         },
         (error) => {
-          localStorage.removeItem('userAccessToken');
+          this.cookieService.delete('userAccessToken', '/');
           this.loaderService.setLoader(false);
           this.router.navigate(['alumni', 'login']);
+          console.error(error);
         }
       );
     }
@@ -63,7 +70,26 @@ export class LoginComponent {
       this.userService.setUserDetails(userDetails);
 
       if (userDetails.role === 'student') {
-        await this.getTranscriptRecord(userDetails.id);
+        const requests = [];
+        requests.push(
+          this.documentService.getTranscriptByStudentId(userDetails.id)
+        );
+        requests.push(
+          this.documentService.getCertificateByStudentId(userDetails.id)
+        );
+
+        forkJoin(requests).subscribe((documents) => {
+          const transcripts = documents[0] as Transcript;
+          const certificate = documents[1] as Certificate;
+
+          const userDocument: UserDocument = {
+            transcripts,
+            certificate,
+          };
+
+          this.documentService.setUserDocument(userDocument);
+          this.loaderService.setLoader(false);
+        });
       } else if (userDetails.role === 'admin') {
         await this.getAllUsers();
       }
@@ -105,44 +131,56 @@ export class LoginComponent {
       .pipe(
         tap((auth: Authentication) => {
           this.email = auth.email;
-          localStorage.setItem('userAccessToken', auth.idToken);
+
+          this.cookieService.set('userAccessToken', auth.idToken);
         }),
         mergeMap(() => this.userService.getUserByEmail(this.email))
       )
       .subscribe(
         (user: IUserDTO) => {
           this.userService.setUserDetails(user);
-
           if (user.role === 'student') {
-            this.getTranscriptRecord(user.id);
+            const requests = [];
+            requests.push(
+              this.documentService.getTranscriptByStudentId(user.id)
+            );
+            requests.push(
+              this.documentService.getCertificateByStudentId(user.id)
+            );
+
+            forkJoin(requests).subscribe((documents) => {
+              const transcripts = documents[0] as Transcript;
+              const certificate = documents[1] as Certificate;
+
+              const userDocument: UserDocument = {
+                transcripts,
+                certificate,
+              };
+
+              this.documentService.setUserDocument(userDocument);
+              this.loaderService.setLoader(false);
+            });
           } else if (user.role === 'admin') {
             this.getAllUsers();
           }
+
+          if (this.router.url.includes('verification')) {
+            return;
+          }
+
+          this.router.navigate(['alumni', 'home']);
         },
         (error) => {
-          this._snackBar.open(
-            'Invalid Username and Password',
-            null,
-            ERROR_SNACKBAR_OPTION
-          );
-          console.log(error);
-          this.loaderService.setLoader(false);
-        }
-      );
-  }
+          const errorMessage = error?.error?.error?.message;
+          const snackError = errorMessage ?? 'Invalid Username and Password';
 
-  private async getTranscriptRecord(studentId: string): Promise<void> {
-    try {
-      const transcripts = await this.transcriptService
-        .getTranscriptByStudentId(studentId)
-        .toPromise();
-      this.transcriptService.setTranscript(transcripts);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      this.loaderService.setLoader(false);
-      this.router.navigate(['alumni', 'home']);
-    }
+          this._snackBar.open(snackError, null, ERROR_SNACKBAR_OPTION);
+          console.log(error);
+        }
+      )
+      .add(() => {
+        this.loaderService.setLoader(false);
+      });
   }
 
   private async getAllUsers(): Promise<void> {

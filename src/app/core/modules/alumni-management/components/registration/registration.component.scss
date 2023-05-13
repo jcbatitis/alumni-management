@@ -1,18 +1,23 @@
 @import "~/src/assets/styles/custom";
 
 :host {
-  display: flex;
-  height: 100vh;
-
   mat-card {
-    margin: 60px auto auto;
-    min-width: 450px;
-    padding-bottom: 80px;
+    max-width: 450px;
   }
 
   form {
     display: flex;
     flex-direction: column;
+
+    section {
+      display: flex;
+      flex-direction: row;
+
+      & > div {
+        display: flex;
+        flex-direction: column;
+      }
+    }
   }
 
   .btn-group {

@@ -9,6 +9,8 @@ import { Grade, Transcript } from 'src/app/core/models/transcript';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
 import { Certificate } from 'src/app/core/models/certificate';
+import { UserDocument } from 'src/app/core/models/document';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-admin',
@@ -53,7 +55,7 @@ export class AdminComponent implements OnInit {
 
   public studentDetail: IUserDTO;
   public studentCertificateUrl: string;
-  public certificate: Certificate;
+  public userDocument: UserDocument;
 
   ngOnInit(): void {
     this.userService.allUsersLoaded$.subscribe((isLoaded) => {
@@ -70,28 +72,6 @@ export class AdminComponent implements OnInit {
         this.userDetail = this.userService.userDetail;
       }
     });
-
-    this.documentService.transcriptsLoaded$.subscribe((isLoaded) => {
-      if (isLoaded) {
-        this.transcripts = this.documentService.userTranscript;
-        this.transcriptGrades = this.documentService.userTranscript.grades;
-        this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
-        this.transcriptRecordStudentId =
-          this.documentService.userTranscript.student_id;
-
-        this.studentDetail = this.listOfUsers.find(
-          (student) => student.id === this.transcriptRecordStudentId
-        );
-
-        this.viewCertificate();
-      }
-    });
-
-    this.documentService.certificateLoaded$.subscribe((isLoaded) => {
-      if (isLoaded) {
-        this.certificate = this.documentService.userCertificate;
-      }
-    });
   }
 
   public applyStudentFilter(event: Event) {
@@ -104,27 +84,37 @@ export class AdminComponent implements OnInit {
     this.transcriptSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public async getTranscriptRecord(student: IUserDTO): Promise<void> {
-    try {
-      this.loaderService.setLoader(true);
-      const transcripts = await this.documentService
-        .getTranscriptByStudentId(student.id)
-        .toPromise();
-      this.documentService.setTranscript(transcripts);
-    } catch (e) {
-      console.error(e);
-    } finally {
+  public getUserDocuments(student: IUserDTO): void {
+    this.loaderService.setLoader(true);
+
+    const requests = [];
+    requests.push(this.documentService.getTranscriptByStudentId(student.id));
+    requests.push(this.documentService.getCertificateByStudentId(student.id));
+
+    forkJoin(requests).subscribe((documents) => {
+      const transcripts = documents[0] as Transcript;
+      const certificate = documents[1] as Certificate;
+
+      const userDocument: UserDocument = {
+        transcripts,
+        certificate,
+      };
+
+      this.userDocument = userDocument;
+      this.transcriptGrades = this.userDocument.transcripts.grades;
+      this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
+
+      this.transcriptRecordStudentId = this.userDocument.transcripts.student_id;
+
+      this.studentDetail = this.listOfUsers.find(
+        (student) => student.id === this.transcriptRecordStudentId
+      );
+
+      this.viewCertificate();
+
       this.tabChange();
       this.loaderService.setLoader(false);
-    }
-  }
-
-  private async getCertficateRecord(studentId: string): Promise<void> {
-    try {
-      const certificate = await this.documentService.getCertificateByStudentId(studentId).toPromise();
-    } catch(e) {
-      console.error(e);
-    }
+    });
   }
 
   public tabChange(): void {
@@ -294,13 +284,13 @@ export class AdminComponent implements OnInit {
     );
 
     pdf.setFontSize(12);
-    pdf.text(this.certificate.certificate_id, 510, 825);
+    pdf.text(this.userDocument.certificate.certificate_id, 510, 825);
 
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
     pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${studentTranscript.first_name}_${studentTranscript.family_name}_${this.certificate.certificate_id}.pdf`;
+    const fileName = `${studentTranscript.first_name}_${studentTranscript.family_name}_${this.userDocument.certificate.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,

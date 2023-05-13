@@ -9,10 +9,14 @@
 
   .detail {
     text-transform: uppercase;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   mat-card {
     width: 1000px;
-    padding-bottom: 50px;
   }
 }

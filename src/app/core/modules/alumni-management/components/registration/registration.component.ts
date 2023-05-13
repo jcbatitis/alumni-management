@@ -26,6 +26,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Certificate } from 'src/app/core/models/certificate';
 import { forkJoin } from 'rxjs';
 import { ERROR_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
+import { UserDocument } from 'src/app/core/models/document';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-registration',
@@ -54,20 +56,19 @@ export class RegistrationComponent implements OnInit {
     private documentService: DocumentService,
     private router: Router,
     private loaderService: LoaderService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private cookieService: CookieService
   ) {
-    this.form = new FormGroup(
-      {
-        studentId: new FormControl('', [Validators.required]),
-        firstName: new FormControl('', [Validators.required]),
-        middleName: new FormControl('', []),
-        familyName: new FormControl('', [Validators.required]),
-        mobileNumber: new FormControl('', [Validators.required]),
-        email: new FormControl('', [Validators.required, Validators.email]),
-        password: new FormControl('', [Validators.required]),
-        confirmPassword: new FormControl('', [Validators.required]),
-      },
-    );
+    this.form = new FormGroup({
+      studentId: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
+      middleName: new FormControl('', []),
+      familyName: new FormControl('', [Validators.required]),
+      mobileNumber: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required]),
+    });
   }
 
   // private studentId: string = `S${Math.floor(1000000 + Math.random() * 9000000).toString()}`;
@@ -85,7 +86,11 @@ export class RegistrationComponent implements OnInit {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
 
-      this._snackBar.open('Please fill in the required details', null, ERROR_SNACKBAR_OPTION);
+      this._snackBar.open(
+        'Please fill in the required details',
+        null,
+        ERROR_SNACKBAR_OPTION
+      );
       return;
     }
 
@@ -123,7 +128,7 @@ export class RegistrationComponent implements OnInit {
       .pipe(
         tap(
           (auth: Authentication) => {
-            localStorage.setItem('userAccessToken', auth.idToken);
+            this.cookieService.set('userAccessToken', auth.idToken);
           },
           (error) => {
             this._snackBar.open(
@@ -271,8 +276,15 @@ export class RegistrationComponent implements OnInit {
     requests.push(this.documentService.createCertificate(certificatePayload));
 
     forkJoin(requests).subscribe((documents) => {
-      const transcript = documents[0] as Transcript;
-      this.documentService.setTranscript(transcript);
+      const transcripts = documents[0] as Transcript;
+      const certificate = documents[1] as Certificate;
+
+      const userDocument: UserDocument = {
+        transcripts,
+        certificate,
+      };
+
+      this.documentService.setUserDocument(userDocument);
       this.loaderService.setLoader(false);
     });
   }

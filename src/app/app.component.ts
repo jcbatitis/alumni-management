@@ -5,6 +5,11 @@ import { UserService } from './core/modules/alumni-management/services/user.serv
 import { Router } from '@angular/router';
 import { DocumentService } from './core/services/document.service';
 import { LoaderService } from './core/services/loader.service';
+import { forkJoin } from 'rxjs';
+import { Transcript } from './core/models/transcript';
+import { Certificate } from './core/models/certificate';
+import { UserDocument } from './core/models/document';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -19,11 +24,13 @@ export class AppComponent implements OnInit {
     private userService: UserService,
     private documentService: DocumentService,
     private router: Router,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
-    const token = localStorage.getItem('userAccessToken');
+    console.log('v2');
+    const token = this.cookieService.get('userAccessToken');
 
     if (token) {
       this.isLoading = true;
@@ -35,9 +42,10 @@ export class AppComponent implements OnInit {
           }
         },
         (error) => {
-          localStorage.removeItem('userAccessToken');
+          this.cookieService.delete('userAccessToken', '/');
           this.isLoading = false;
           this.router.navigate(['alumni', 'login']);
+          console.error(error);
         }
       );
     }
@@ -55,8 +63,26 @@ export class AppComponent implements OnInit {
       this.userService.setUserDetails(userDetails);
 
       if (userDetails.role === 'student') {
-        await this.getTranscriptRecord(userDetails.id);
-        await this.getCertficateRecord(userDetails.id);
+        const requests = [];
+        requests.push(
+          this.documentService.getTranscriptByStudentId(userDetails.id)
+        );
+        requests.push(
+          this.documentService.getCertificateByStudentId(userDetails.id)
+        );
+
+        forkJoin(requests).subscribe((documents) => {
+          const transcripts = documents[0] as Transcript;
+          const certificate = documents[1] as Certificate;
+
+          const userDocument: UserDocument = {
+            transcripts,
+            certificate,
+          };
+
+          this.documentService.setUserDocument(userDocument);
+          this.loaderService.setLoader(false);
+        });
       } else if (userDetails.role === 'admin') {
         await this.getAllUsers();
       }
@@ -73,31 +99,11 @@ export class AppComponent implements OnInit {
     }
   }
 
-  private async getTranscriptRecord(studentId: string): Promise<void> {
-    try {
-      const transcripts = await this.documentService
-        .getTranscriptByStudentId(studentId)
-        .toPromise();
-      this.documentService.setTranscript(transcripts);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-
   private async getAllUsers(): Promise<void> {
     try {
       const users = await this.userService.getUsers().toPromise();
       this.userService.setUsers(users);
     } catch (e) {
-      console.error(e);
-    }
-  }
-
-  private async getCertficateRecord(studentId: string): Promise<void> {
-    try {
-      const certificate = await this.documentService.getCertificateByStudentId(studentId).toPromise();
-      this.documentService.setCertificate(certificate);
-    } catch(e) {
       console.error(e);
     }
   }

@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SUCCESS_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
 import { Certificate } from 'src/app/core/models/certificate';
+import { UserDocument } from 'src/app/core/models/document';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
@@ -27,8 +28,7 @@ export class StudentDetailsComponent implements OnInit {
 
   public transcriptSource: MatTableDataSource<Grade>;
   public transcriptGrades: Grade[];
-  public transcripts: Transcript;
-  public certificate: Certificate;
+  public userDocument: UserDocument;
   public displayedColumns: string[] = [
     'year',
     'course_code',
@@ -49,16 +49,10 @@ export class StudentDetailsComponent implements OnInit {
       }
     });
 
-    this.documentService.certificateLoaded$.subscribe((isLoaded) => {
+    this.documentService.documentLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
-        this.certificate = this.documentService.userCertificate;
-      }
-    });
-
-    this.documentService.transcriptsLoaded$.subscribe((isLoaded) => {
-      if (isLoaded) {
-        this.transcripts = this.documentService.userTranscript;
-        this.transcriptGrades = this.documentService.userTranscript.grades;
+        this.userDocument = this.documentService.userDocuments;
+        this.transcriptGrades = this.documentService.userDocuments.transcripts.grades;
         this.transcriptSource = new MatTableDataSource(this.transcriptGrades);
         this.viewCertificate();
       }
@@ -252,13 +246,13 @@ export class StudentDetailsComponent implements OnInit {
     );
 
     pdf.setFontSize(12);
-    pdf.text(this.certificate.certificate_id, 510, 825);
+    pdf.text(this.userDocument?.certificate?.certificate_id, 510, 825);
 
     var footer = new Image();
     footer.src = './assets/images/rmit.png';
     pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${this.userDetail.first_name}_${this.userDetail.family_name}_${this.certificate.certificate_id}.pdf`;
+    const fileName = `${this.userDetail.first_name}_${this.userDetail.family_name}_${this.userDocument.certificate.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,
