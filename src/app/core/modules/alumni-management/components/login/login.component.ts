@@ -53,7 +53,7 @@ export class LoginComponent {
           }
         },
         (error) => {
-          this.cookieService.delete('userAccessToken', '/');
+          this.cookieService.deleteAll();
           this.loaderService.setLoader(false);
           this.router.navigate(['alumni', 'login']);
           console.error(error);

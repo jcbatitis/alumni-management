@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log('v2');
+    console.log('app.component');
     const token = this.cookieService.get('userAccessToken');
 
     if (token) {
@@ -42,12 +42,14 @@ export class AppComponent implements OnInit {
           }
         },
         (error) => {
-          this.cookieService.delete('userAccessToken', '/');
+          this.cookieService.deleteAll();
           this.isLoading = false;
           this.router.navigate(['alumni', 'login']);
           console.error(error);
         }
       );
+
+
     }
 
     this.loaderService.loader$.subscribe((isLoading) => {

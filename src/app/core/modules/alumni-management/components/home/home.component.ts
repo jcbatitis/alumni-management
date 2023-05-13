@@ -24,6 +24,8 @@ export class HomeComponent implements OnInit {
   public userDetail: IUserDTO;
 
   ngOnInit(): void {
+    console.log('home.component');
+
     const token = this.cookieService.get('userAccessToken');
     if (!token) {
       this.router.navigate(['alumni', 'login']);
@@ -40,7 +42,7 @@ export class HomeComponent implements OnInit {
     this.loaderService.setLoader(true);
 
     setTimeout(() => {
-      this.cookieService.delete('userAccessToken', '/');
+      this.cookieService.deleteAll();
       this.userService.setUserDetails(null);
       this.userService.setUsers(null);
       this.transcriptService.setUserDocument(null);
