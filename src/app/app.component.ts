@@ -42,7 +42,8 @@ export class AppComponent implements OnInit {
           }
         },
         (error) => {
-          this.cookieService.deleteAll();
+              this.cookieService.delete('userAccessToken');
+
           this.isLoading = false;
           this.router.navigate(['alumni', 'login']);
           console.error(error);

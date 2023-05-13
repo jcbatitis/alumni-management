@@ -53,7 +53,8 @@ export class LoginComponent {
           }
         },
         (error) => {
-          this.cookieService.deleteAll();
+          this.cookieService.delete('userAccessToken');
+
           this.loaderService.setLoader(false);
           this.router.navigate(['alumni', 'login']);
           console.error(error);
@@ -158,7 +159,6 @@ export class LoginComponent {
               };
 
               this.documentService.setUserDocument(userDocument);
-              this.loaderService.setLoader(false);
             });
           } else if (user.role === 'admin') {
             this.getAllUsers();
@@ -169,18 +169,17 @@ export class LoginComponent {
           }
 
           this.router.navigate(['alumni', 'home']);
+          this.loaderService.setLoader(false);
         },
         (error) => {
           const errorMessage = error?.error?.error?.message;
           const snackError = errorMessage ?? 'Invalid Username and Password';
-
           this._snackBar.open(snackError, null, ERROR_SNACKBAR_OPTION);
+          this.loaderService.setLoader(false);
           console.log(error);
         }
       )
-      .add(() => {
-        this.loaderService.setLoader(false);
-      });
+      .add(() => {});
   }
 
   private async getAllUsers(): Promise<void> {

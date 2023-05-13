@@ -1,6 +1,9 @@
 @import "~/src/assets/styles/custom";
 
 :host {
+  .container {
+    padding: 20px;
+  }
   .user {
     display: flex;
     flex-direction: row;
@@ -16,6 +19,7 @@
   }
 
   mat-card {
-    width: 1000px;
+    margin: 20px auto;
+    max-width: 1000px;
   }
 }

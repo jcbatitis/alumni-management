@@ -32,7 +32,7 @@ export class ToolbarComponent implements OnInit {
 
   public logout(): void {
     this.loaderService.setLoader(true);
-    this.cookieService.deleteAll();
+    this.cookieService.delete('userAccessToken');
 
     setTimeout(() => {
       this.userService.setUserDetails(null);

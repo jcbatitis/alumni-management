@@ -1,44 +1,46 @@
-<mat-card class="profile" *ngIf="userDetail">
-  <div class="user">
-    <img
-      height="80px"
-      width="80px"
-      src="assets/images/profile.png"
-      *ngIf="userDetail?.role === 'admin'"
-    />
-    <img
-      height="80px"
-      width="80px"
-      src="assets/images/blank_face.jpg"
-      *ngIf="userDetail?.role === 'student'"
-    />
-    <div class="detail">
-      <h1>{{ userDetail?.first_name + " " + userDetail?.family_name }}</h1>
-      <h3>Role: {{ userDetail?.role }}</h3>
-      <h4 *ngIf="userDetail?.student_id">
-        Student id: {{ userDetail?.student_id }}
-      </h4>
+<div class="container">
+  <mat-card class="profile" *ngIf="userDetail">
+    <div class="user">
+      <img
+        height="80px"
+        width="80px"
+        src="assets/images/profile.png"
+        *ngIf="userDetail?.role === 'admin'"
+      />
+      <img
+        height="80px"
+        width="80px"
+        src="assets/images/blank_face.jpg"
+        *ngIf="userDetail?.role === 'student'"
+      />
+      <div class="detail">
+        <h1>{{ userDetail?.first_name + " " + userDetail?.family_name }}</h1>
+        <h3>Role: {{ userDetail?.role }}</h3>
+        <h4 *ngIf="userDetail?.student_id">
+          Student id: {{ userDetail?.student_id }}
+        </h4>
+      </div>
     </div>
-  </div>
-
-  <!-- <div class="logout">
-    <button (click)="logout()" mat-fab color="primary" aria-label="Logout">
-      <a title="Logout">
-        <mat-icon aria-hidden="false">logout</mat-icon>
-      </a>
-    </button>
-  </div> -->
-</mat-card>
-
-<ng-container *ngIf="userDetail">
-  <mat-card>
-    <mat-card-content>
-      <ng-container *ngIf="userDetail?.role === 'student'">
-        <app-student-details></app-student-details>
-      </ng-container>
-      <ng-container *ngIf="userDetail?.role === 'admin'">
-        <app-admin></app-admin>
-      </ng-container>
-    </mat-card-content>
+  
+    <!-- <div class="logout">
+      <button (click)="logout()" mat-fab color="primary" aria-label="Logout">
+        <a title="Logout">
+          <mat-icon aria-hidden="false">logout</mat-icon>
+        </a>
+      </button>
+    </div> -->
   </mat-card>
-</ng-container>
+  
+  <ng-container *ngIf="userDetail">
+    <mat-card>
+      <mat-card-content>
+        <ng-container *ngIf="userDetail?.role === 'student'">
+          <app-student-details></app-student-details>
+        </ng-container>
+        <ng-container *ngIf="userDetail?.role === 'admin'">
+          <app-admin></app-admin>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+  

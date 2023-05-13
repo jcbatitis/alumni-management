@@ -42,7 +42,8 @@ export class HomeComponent implements OnInit {
     this.loaderService.setLoader(true);
 
     setTimeout(() => {
-      this.cookieService.deleteAll();
+          this.cookieService.delete('userAccessToken');
+
       this.userService.setUserDetails(null);
       this.userService.setUsers(null);
       this.transcriptService.setUserDocument(null);
