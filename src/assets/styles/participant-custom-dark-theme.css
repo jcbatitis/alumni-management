@@ -1,3 +1,6 @@
+::ng-deep #participant-interface-container {
+  background-color: #8bc6d9;
+}
 /* WELCOME HEADER START */
 #participant-header-container {
   background: rgb(59, 58, 58);
