@@ -57,6 +57,24 @@ export class AdminComponent implements OnInit {
   public studentCertificateUrl: string;
   public userDocument: UserDocument;
 
+  public get studentFullName(): string {
+    if (!this.studentDetail) {
+      return;
+    }
+
+    let name = '';
+
+    name = `${this.studentDetail.first_name}`;
+
+    if (this.studentDetail.middle_name) {
+      name += ` ${this.studentDetail.middle_name}`;
+    }
+
+    name += ` ${this.studentDetail.family_name}`;
+
+    return name;
+  }
+
   ngOnInit(): void {
     this.userService.allUsersLoaded$.subscribe((isLoaded) => {
       if (isLoaded) {
@@ -145,10 +163,18 @@ export class AdminComponent implements OnInit {
     pdf.text('ACADEMIC TRANSCRIPT', 390, 60);
 
     let name = '';
+
     const studentTranscript = this.listOfUsers.find(
       (user) => user.id === this.transcriptRecordStudentId
     );
-    name = `${studentTranscript.first_name} ${studentTranscript.family_name}`;
+
+    name = `${studentTranscript.first_name}`;
+
+    if (studentTranscript.middle_name) {
+      name += ` ${studentTranscript.middle_name}`;
+    }
+
+    name += ` ${studentTranscript.family_name}`;
 
     pdf.text(name, 30, 150);
     pdf.text('Student Number', 30, 170);
@@ -193,7 +219,14 @@ export class AdminComponent implements OnInit {
     pdf.setFontSize(10);
 
     pdf.text('End of Academic Record', 30, 700);
-    pdf.save(`${name}_Transcripts.pdf`);
+
+    const fileName = `${name}_Transcripts.pdf`;
+
+    pdf.setProperties({
+      title: fileName,
+    });
+
+    pdf.save(fileName);
 
     this._snackBar.open(
       'Successfully downloaded transcripts',
@@ -260,7 +293,14 @@ export class AdminComponent implements OnInit {
     const studentTranscript = this.listOfUsers.find(
       (user) => user.id === this.transcriptRecordStudentId
     );
-    name = `${studentTranscript.first_name} ${studentTranscript.family_name}`;
+
+    name = `${studentTranscript.first_name}`;
+
+    if (studentTranscript.middle_name) {
+      name += ` ${studentTranscript.middle_name}`;
+    }
+
+    name += ` ${studentTranscript.family_name}`;
 
     pdf.text(name, center, 370, { align: 'center' });
 
@@ -290,7 +330,7 @@ export class AdminComponent implements OnInit {
     footer.src = './assets/images/rmit.png';
     pdf.addImage(footer, 'png', 5, 525, 543, 272);
 
-    const fileName = `${studentTranscript.first_name}_${studentTranscript.family_name}_${this.userDocument.certificate.certificate_id}.pdf`;
+    const fileName = `${name}_${this.userDocument.certificate.certificate_id}.pdf`;
 
     pdf.setProperties({
       title: fileName,

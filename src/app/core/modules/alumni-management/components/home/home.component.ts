@@ -22,6 +22,25 @@ export class HomeComponent implements OnInit {
     private cookieService: CookieService
   ) {}
   public userDetail: IUserDTO;
+  public name: string;
+
+  public get fullName(): string {
+    if (!this.userDetail) {
+      return;
+    }
+
+    let name = '';
+
+    name = `${this.userDetail.first_name}`;
+
+    if (this.userDetail.middle_name) {
+      name += ` ${this.userDetail.middle_name}`;
+    }
+
+    name += ` ${this.userDetail.family_name}`;
+
+    return name;
+  }
 
   ngOnInit(): void {
     console.log('home.component');
@@ -42,7 +61,7 @@ export class HomeComponent implements OnInit {
     this.loaderService.setLoader(true);
 
     setTimeout(() => {
-          this.cookieService.delete('userAccessToken');
+      this.cookieService.delete('userAccessToken');
 
       this.userService.setUserDetails(null);
       this.userService.setUsers(null);

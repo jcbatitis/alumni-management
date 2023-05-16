@@ -3,7 +3,7 @@
     <h2>SELECTED STUDENT</h2>
     <h4>
       Name:
-      {{ studentDetail?.first_name + " " + studentDetail?.family_name }}
+      {{ studentFullName }}
     </h4>
     <h4>ID: {{ studentDetail?.student_id }}</h4>
   </div>
@@ -61,16 +61,12 @@
             button
             mat-raised-button
             [color]="
-              detail.id === transcriptRecordStudentId
-                ? 'primary'
-                : 'basic'
+              detail.id === transcriptRecordStudentId ? 'primary' : 'basic'
             "
             (click)="getUserDocuments(detail)"
           >
             {{
-              detail.id === transcriptRecordStudentId
-                ? "Selected"
-                : "Select"
+              detail.id === transcriptRecordStudentId ? "Selected" : "Select"
             }}
           </button>
         </td>
