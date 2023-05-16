@@ -114,10 +114,10 @@ button.mat-focus-indicator.mat-raised-button.mat-button-base.mat-primary {
   box-shadow: none;
 }
 
-button.mat-focus-indicator.mat-raised-button.mat-button-base.mat-accent:hover {
-  background-color: #aa021e !important;
-}
-
 button.mat-focus-indicator.mat-raised-button.mat-button-base.mat-accent:disabled {
   background-color: #e0dedf !important;
+}
+
+button.mat-focus-indicator.mat-raised-button.mat-button-base.mat-accent:hover:enabled {
+  background-color: #aa021e !important;
 }
