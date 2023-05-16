@@ -8,6 +8,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -17,7 +18,9 @@ import { CookieService } from 'ngx-cookie-service';
     SharedModule,
     RouterModule,
   ],
-  providers: [CookieService],
+  providers: [
+    CookieService
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

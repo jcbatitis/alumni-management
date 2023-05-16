@@ -71,6 +71,16 @@
         </mat-error>
       </mat-form-field>
 
+      <div class="recaptcha">
+        <re-captcha
+          id="recaptcha"
+          name="recaptcha"
+          formControlName="recaptcha"
+          (resolved)="resolved($event)"
+          (errored)="onError($event)"
+        ></re-captcha>
+      </div>
+
       <div class="btn-group">
         <button
           mat-raised-button
@@ -80,7 +90,14 @@
         >
           Back To Login
         </button>
-        <button mat-raised-button color="accent" type="submit">Register</button>
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          [disabled]="!recaptchaSuccess"
+        >
+          Register
+        </button>
       </div>
     </form>
   </mat-card-content>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, VERSION } from '@angular/core';
 import { RegistrationService } from '../../services/registration.service';
 import { IAuthUserDTO, IUserDTO } from 'src/app/core/models/user';
 import {
@@ -28,6 +28,7 @@ import { forkJoin } from 'rxjs';
 import { ERROR_SNACKBAR_OPTION } from 'src/app/core/models/snackbar';
 import { UserDocument } from 'src/app/core/models/document';
 import { CookieService } from 'ngx-cookie-service';
+import { RecaptchaErrorParameters } from 'ng-recaptcha';
 
 @Component({
   selector: 'app-registration',
@@ -49,6 +50,8 @@ export class RegistrationComponent implements OnInit {
     email: 'is in wrong format.',
   };
 
+  public token: string | undefined;
+
   constructor(
     private authService: AuthenticationService,
     private registrationService: RegistrationService,
@@ -60,15 +63,21 @@ export class RegistrationComponent implements OnInit {
     private cookieService: CookieService
   ) {
     this.form = new FormGroup({
-      studentId: new FormControl('', [Validators.required]),
-      firstName: new FormControl('', [Validators.required]),
+      studentId: new FormControl('S0000', [Validators.required]),
+      firstName: new FormControl('FirstName', [Validators.required]),
       middleName: new FormControl('', []),
-      familyName: new FormControl('', [Validators.required]),
-      mobileNumber: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      password: new FormControl('', [Validators.required]),
-      confirmPassword: new FormControl('', [Validators.required]),
+      familyName: new FormControl('LastName', [Validators.required]),
+      mobileNumber: new FormControl('00000', [Validators.required]),
+      email: new FormControl('sixth@rmit.com', [
+        Validators.required,
+        Validators.email,
+      ]),
+      password: new FormControl('dev1234', [Validators.required]),
+      confirmPassword: new FormControl('dev1234', [Validators.required]),
+      recaptcha: new FormControl('', [Validators.required]),
     });
+
+    this.token = undefined;
   }
 
   // private studentId: string = `S${Math.floor(1000000 + Math.random() * 9000000).toString()}`;
@@ -102,6 +111,8 @@ export class RegistrationComponent implements OnInit {
       );
       return;
     }
+
+    debugger;
 
     const payload: IUserDTO = {
       first_name: this.form.get('firstName').value,
@@ -291,5 +302,17 @@ export class RegistrationComponent implements OnInit {
 
   public redirectToLogin(): void {
     this.router.navigate(['alumni', 'login']);
+  }
+
+  public recaptchaSuccess: boolean = false;
+
+  public resolved(captchaResponse: string) {
+    console.log(`Resolved captcha with response: ${captchaResponse}`);
+    this.recaptchaSuccess = true;
+  }
+
+  public onError(errorDetails: RecaptchaErrorParameters): void {
+    console.log(`reCAPTCHA error encountered; details:`, errorDetails);
+    this.recaptchaSuccess = false;
   }
 }

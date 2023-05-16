@@ -12,6 +12,17 @@ import { VerificationComponent } from './components/verification/verification.co
 import { StudentDetailsComponent } from './components/student-details/student-details.component';
 import { PipeModule } from '../../pipes/pipe.module';
 
+import {
+  RecaptchaModule,
+  RECAPTCHA_SETTINGS,
+  RecaptchaSettings,
+  RecaptchaFormsModule,
+  RECAPTCHA_V3_SITE_KEY,
+  RecaptchaV3Module,
+} from 'ng-recaptcha';
+
+const RECAPTCHA_V3_KEY = '6LdYrBImAAAAAKV0xjnh4pgaTXh7OecBvZAQgqA8';
+const RECAPTCHA_V2_KEY = '6LeDthImAAAAAIEL9ecmqzKUzeUk0sAQKPZKiIcZ';
 @NgModule({
   declarations: [
     AlumniManagementComponent,
@@ -28,7 +39,16 @@ import { PipeModule } from '../../pipes/pipe.module';
     MaterialModule,
     ReactiveFormsModule,
     PipeModule.forRoot(),
+    RecaptchaModule,
+    RecaptchaFormsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: RECAPTCHA_SETTINGS,
+      useValue: {
+        siteKey: RECAPTCHA_V2_KEY,
+      } as RecaptchaSettings,
+    },
+  ],
 })
 export class AlumniManagementModule {}
