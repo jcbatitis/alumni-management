@@ -63,17 +63,17 @@ export class RegistrationComponent implements OnInit {
     private cookieService: CookieService
   ) {
     this.form = new FormGroup({
-      studentId: new FormControl('S0000', [Validators.required]),
-      firstName: new FormControl('FirstName', [Validators.required]),
+      studentId: new FormControl('', [Validators.required]),
+      firstName: new FormControl('', [Validators.required]),
       middleName: new FormControl('', []),
-      familyName: new FormControl('LastName', [Validators.required]),
-      mobileNumber: new FormControl('00000', [Validators.required]),
-      email: new FormControl('sixth@rmit.com', [
+      familyName: new FormControl('', [Validators.required]),
+      mobileNumber: new FormControl('', [Validators.required]),
+      email: new FormControl('', [
         Validators.required,
         Validators.email,
       ]),
-      password: new FormControl('dev1234', [Validators.required]),
-      confirmPassword: new FormControl('dev1234', [Validators.required]),
+      password: new FormControl('', [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required]),
       recaptcha: new FormControl('', [Validators.required]),
     });
 
