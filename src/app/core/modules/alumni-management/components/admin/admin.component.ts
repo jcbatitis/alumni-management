@@ -57,6 +57,14 @@ export class AdminComponent implements OnInit {
   public studentCertificateUrl: string;
   public userDocument: UserDocument;
 
+  public get studentId(): string {
+    if (!this.studentDetail) {
+      return;
+    }
+
+    return this.studentDetail.id;
+  }
+
   public get studentFullName(): string {
     if (!this.studentDetail) {
       return;

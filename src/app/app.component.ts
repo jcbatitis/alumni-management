@@ -29,6 +29,7 @@ export class AppComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('final version')
     console.log('app.component');
     const token = this.cookieService.get('userAccessToken');
 
